@@ -15,9 +15,9 @@ const ESTILOS: Record<EstadoPago, { borde: string; texto: string; fondo: string;
     giro: "rotate-2",
   },
   mora: {
-    borde: "border-sello",
-    texto: "text-sello",
-    fondo: "bg-sello-suave/25",
+    borde: "border-mora",
+    texto: "text-mora",
+    fondo: "bg-mora-suave",
     giro: "-rotate-2",
   },
 };

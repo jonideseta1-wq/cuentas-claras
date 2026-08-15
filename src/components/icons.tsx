@@ -105,3 +105,31 @@ export function IconFlechaIzq(props: IconProps) {
     </svg>
   );
 }
+
+export function IconCampana(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5.3 13.6V9.2a4.7 4.7 0 0 1 9.4 0v4.4l1.3 1.9H4l1.3-1.9Z" />
+      <path d="M8.5 17.2a1.6 1.6 0 0 0 3 0" />
+    </svg>
+  );
+}
+
+export function IconPerfil(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <circle cx="10" cy="6.9" r="3.1" />
+      <path d="M4.2 16.8a5.8 5.8 0 0 1 11.6 0" />
+    </svg>
+  );
+}
+
+export function IconDocumento(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M6 2.8h5.4L15 6.4v10.8a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V3.8a1 1 0 0 1 1-1Z" />
+      <path d="M11.2 2.8v3.2a.6.6 0 0 0 .6.6H15" />
+      <path d="M7.3 10.6h5.4M7.3 13.2h5.4" />
+    </svg>
+  );
+}

@@ -1,10 +1,10 @@
 import type { ComponentType, SVGProps } from "react";
 
 const TONOS = {
-  sello: { fondo: "bg-sello-suave/25", texto: "text-sello" },
   tinta: { fondo: "bg-tinta/[0.08]", texto: "text-tinta" },
+  lila: { fondo: "bg-lila-suave", texto: "text-lila" },
+  mostaza: { fondo: "bg-mostaza-suave", texto: "text-mostaza" },
   verde: { fondo: "bg-verde-recibo-suave", texto: "text-verde-recibo" },
-  ambar: { fondo: "bg-ambar-suave", texto: "text-ambar" },
 } as const;
 
 export function StatTile({

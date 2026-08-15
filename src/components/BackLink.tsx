@@ -12,7 +12,7 @@ export function BackLink({
   const clases =
     tono === "oscuro"
       ? "text-hueso/75 hover:text-hueso"
-      : "text-tinta/55 hover:text-sello";
+      : "text-tinta/55 hover:text-lila";
   return (
     <Link
       to={to}

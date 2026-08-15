@@ -4,6 +4,7 @@ import { BackLink } from "../components/BackLink";
 import { Card } from "../components/Card";
 import { StatusPill } from "../components/StatusPill";
 import { StatTile } from "../components/StatTile";
+import { IlustracionPropiedad } from "../components/IlustracionPropiedad";
 import { useDatos } from "../state/DataContext";
 import {
   diasHastaVencimientoContrato,
@@ -54,7 +55,7 @@ export function Admin() {
 
   return (
     <div className="min-h-svh pb-16">
-      <div className="bg-sello-oscuro px-6 pb-24 pt-7 sm:px-10">
+      <div className="bg-tinta px-6 pb-24 pt-7 sm:px-10">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
           <BackLink tono="oscuro" />
           {confirmandoReinicio ? (
@@ -65,7 +66,7 @@ export function Admin() {
                   reiniciarDemo();
                   setConfirmandoReinicio(false);
                 }}
-                className="rounded-full bg-hueso px-3 py-1.5 font-semibold text-sello-oscuro"
+                className="rounded-full bg-hueso px-3 py-1.5 font-semibold text-tinta"
               >
                 Sí, reiniciar
               </button>
@@ -115,7 +116,7 @@ export function Admin() {
             />
             <StatTile
               Icono={IconAlertaCirculo}
-              tono="sello"
+              tono="mostaza"
               etiqueta="Falta cobrar este mes"
               valor={formatoMoneda(pendienteDeCobro)}
             />
@@ -138,10 +139,10 @@ export function Admin() {
               {enMora.map(({ prop }) => (
                 <div
                   key={prop.id}
-                  className="flex items-start gap-3 rounded-xl border border-sello/25 bg-sello-suave/15 px-4 py-3.5"
+                  className="flex items-start gap-3 rounded-xl border border-mora/25 bg-mora-suave/60 px-4 py-3.5"
                 >
-                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sello-suave/30">
-                    <IconAlertaCirculo className="h-[18px] w-[18px] text-sello" />
+                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-mora-suave">
+                    <IconAlertaCirculo className="h-[18px] w-[18px] text-mora" />
                   </span>
                   <p className="font-sans text-sm text-tinta/80">
                     <strong className="font-semibold">{prop.inquilino}</strong>{" "}
@@ -182,7 +183,10 @@ export function Admin() {
                 className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6"
               >
                 <div className="flex items-center gap-4">
-                  <StatusPill estado={estado} />
+                  <IlustracionPropiedad
+                    seed={prop.id}
+                    className="h-14 w-14 shrink-0 rounded-xl"
+                  />
                   <div>
                     <p className="font-display text-base font-semibold text-tinta">
                       {prop.direccion}
@@ -203,6 +207,7 @@ export function Admin() {
                 </div>
 
                 <div className="flex items-center gap-5 sm:gap-8">
+                  <StatusPill estado={estado} />
                   <span className="tabular font-mono text-base font-semibold text-tinta">
                     {formatoMoneda(prop.alquilerMensual)}
                   </span>
@@ -213,7 +218,7 @@ export function Admin() {
                   ) : (
                     <button
                       onClick={() => registrarPago(prop.id, prop.alquilerMensual)}
-                      className="whitespace-nowrap rounded-full bg-sello-oscuro px-4 py-2 font-sans text-xs font-semibold text-hueso transition hover:bg-sello"
+                      className="whitespace-nowrap rounded-full bg-tinta px-4 py-2 font-sans text-xs font-semibold text-hueso transition hover:bg-tinta-suave"
                     >
                       Registrar pago
                     </button>

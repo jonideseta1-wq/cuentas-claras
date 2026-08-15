@@ -19,8 +19,8 @@ const CONFIG: Record<
   },
   mora: {
     etiqueta: "Mora",
-    texto: "text-sello",
-    fondo: "bg-sello-suave/25",
+    texto: "text-mora",
+    fondo: "bg-mora-suave",
     Icono: IconAlertaCirculo,
   },
 };

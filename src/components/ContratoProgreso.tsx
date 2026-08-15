@@ -16,13 +16,13 @@ export function ContratoProgreso({
         <p className="font-sans text-sm font-medium text-tinta/70">
           Contrato en curso
         </p>
-        <p className="font-mono text-sm font-semibold text-sello-oscuro">
+        <p className="font-mono text-sm font-semibold text-tinta">
           {pct}% completado
         </p>
       </div>
       <div className="mt-2.5 h-2.5 w-full overflow-hidden rounded-full bg-grafito-suave/50">
         <div
-          className="h-full rounded-full bg-sello-oscuro transition-[width]"
+          className="h-full rounded-full bg-tinta transition-[width]"
           style={{ width: `${pct}%` }}
         />
       </div>

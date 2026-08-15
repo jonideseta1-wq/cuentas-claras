@@ -1,20 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paleta "Cuentas Claras" — ledger de recibos, no template de IA */
-  --color-tinta: #142b3d;
-  --color-tinta-suave: #24435c;
-  --color-papel: #eef1ec;
-  --color-hueso: #faf9f4;
-  --color-sello: #a63d40;
-  --color-sello-suave: #c25c5f;
-  --color-sello-oscuro: #6e2a2c;
+  /* Paleta "Cuentas Claras" — índigo, lila y mostaza. Nada de verde/teal
+     ni rojo/marrón como color dominante: eso queda acotado a los estados. */
+  --color-tinta: #2a2354;
+  --color-tinta-suave: #453a7d;
+  --color-lila: #6c5fb0;
+  --color-lila-suave: #eae6f7;
+  --color-mostaza: #c08e1f;
+  --color-mostaza-suave: #f3e6c2;
+  --color-papel: #f3f1ea;
+  --color-hueso: #fbfaf6;
+  --color-grafito: #6e6b78;
+  --color-grafito-suave: #dad7e0;
+
+  /* Estados de pago — acotados a badges puntuales, no son color de marca */
   --color-verde-recibo: #2e6f5e;
   --color-verde-recibo-suave: #dbe9e2;
-  --color-ambar: #c98a2b;
-  --color-ambar-suave: #f2e3c6;
-  --color-grafito: #6b6b62;
-  --color-grafito-suave: #d8d6cb;
+  --color-ambar: #b5762a;
+  --color-ambar-suave: #f0dfc0;
+  --color-mora: #b5443a;
+  --color-mora-suave: #f3d9d5;
 
   --font-display: "Fraunces", "Iowan Old Style", serif;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -36,12 +42,12 @@
     color: var(--color-tinta);
     font-family: var(--font-sans);
     background-image:
-      radial-gradient(circle at 1px 1px, rgba(20, 43, 61, 0.055) 1px, transparent 0);
+      radial-gradient(circle at 1px 1px, rgba(42, 35, 84, 0.05) 1px, transparent 0);
     background-size: 22px 22px;
   }
 
   ::selection {
-    background: var(--color-sello);
+    background: var(--color-tinta);
     color: var(--color-hueso);
   }
 }

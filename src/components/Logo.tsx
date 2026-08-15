@@ -1,6 +1,6 @@
 export function Logo({ tono = "claro" }: { tono?: "claro" | "oscuro" }) {
   const colorTexto = tono === "claro" ? "text-tinta" : "text-hueso";
-  const colorMarca = tono === "claro" ? "border-sello text-sello" : "border-hueso text-hueso";
+  const colorMarca = tono === "claro" ? "border-tinta text-tinta" : "border-hueso text-hueso";
 
   return (
     <div className="inline-flex items-center gap-2.5">

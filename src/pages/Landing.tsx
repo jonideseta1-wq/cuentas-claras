@@ -45,7 +45,7 @@ export function Landing() {
       <main className="mx-auto max-w-6xl px-6 sm:px-10">
         <section className="grid items-center gap-14 py-10 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-sello/30 bg-sello-suave/20 px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-sello">
+            <span className="inline-flex items-center gap-2 rounded-full border border-lila/30 bg-lila-suave px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-lila">
               Gestión de alquileres, sin planillas sueltas
             </span>
             <h1 className="mt-6 font-display text-[2.75rem] font-semibold leading-[1.05] tracking-tight text-tinta sm:text-6xl">
@@ -59,7 +59,7 @@ export function Landing() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 to="/admin"
-                className="rounded-full bg-sello px-6 py-3 font-sans text-sm font-semibold text-hueso shadow-[0_10px_24px_-10px_rgba(166,61,64,0.6)] transition hover:bg-sello-suave"
+                className="rounded-full bg-tinta px-6 py-3 font-sans text-sm font-semibold text-hueso shadow-[0_10px_24px_-10px_rgba(42,35,84,0.55)] transition hover:bg-tinta-suave"
               >
                 Entrar al panel administrador
               </Link>
@@ -77,7 +77,7 @@ export function Landing() {
           </div>
 
           <div className="relative mx-auto w-full max-w-sm">
-            <div className="absolute -right-4 -top-4 -rotate-2 rounded-full border-2 border-dashed border-sello/40 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-sello/70 sm:-right-8">
+            <div className="absolute -right-4 -top-4 -rotate-2 rounded-full border-2 border-dashed border-mostaza/50 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-mostaza sm:-right-8">
               Ficha modelo
             </div>
             <Card className="borde-perforado pb-6">
@@ -120,7 +120,7 @@ export function Landing() {
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
             {PASOS.map((paso) => (
               <div key={paso.numero}>
-                <span className="font-mono text-sm font-semibold text-sello">
+                <span className="font-mono text-sm font-semibold text-lila">
                   {paso.numero}
                 </span>
                 <h3 className="mt-3 font-display text-lg font-semibold text-tinta">
