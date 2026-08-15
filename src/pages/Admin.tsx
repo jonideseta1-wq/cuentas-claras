@@ -2,7 +2,8 @@ import { useMemo, useState } from "react";
 import { Logo } from "../components/Logo";
 import { BackLink } from "../components/BackLink";
 import { Card } from "../components/Card";
-import { StampBadge } from "../components/StampBadge";
+import { StatusPill } from "../components/StatusPill";
+import { StatTile } from "../components/StatTile";
 import { useDatos } from "../state/DataContext";
 import {
   diasHastaVencimientoContrato,
@@ -12,6 +13,7 @@ import {
   formatoMoneda,
   mesActual,
 } from "../lib/utils";
+import { IconAlertaCirculo, IconCalendario, IconCasa, IconRecibo } from "../components/icons";
 
 export function Admin() {
   const { datos, registrarPago, reiniciarDemo } = useDatos();
@@ -44,37 +46,32 @@ export function Admin() {
     .filter((f) => f.estado !== "al-dia")
     .reduce((acc, f) => acc + f.prop.alquilerMensual, 0);
 
+  const alDia = filas.filter((f) => f.estado === "al-dia").length;
   const enMora = filas.filter((f) => f.estado === "mora");
   const contratosPorVencer = filas
     .filter((f) => f.diasContrato <= 60)
     .sort((a, b) => a.diasContrato - b.diasContrato);
 
   return (
-    <div className="min-h-svh pb-20">
-      <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-7 sm:px-10">
-        <div className="flex flex-col items-start gap-2">
-          <BackLink />
-          <Logo />
-        </div>
-        <div className="flex items-center gap-3">
-          <span className="font-mono text-xs uppercase tracking-[0.12em] text-tinta/45">
-            {formatoMes(mes)}
-          </span>
+    <div className="min-h-svh pb-16">
+      <div className="bg-sello-oscuro px-6 pb-24 pt-7 sm:px-10">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4">
+          <BackLink tono="oscuro" />
           {confirmandoReinicio ? (
             <div className="flex items-center gap-2 font-sans text-xs">
-              <span className="text-tinta/60">¿Reiniciar datos de demo?</span>
+              <span className="text-hueso/70">¿Reiniciar datos de demo?</span>
               <button
                 onClick={() => {
                   reiniciarDemo();
                   setConfirmandoReinicio(false);
                 }}
-                className="rounded-full bg-sello px-3 py-1.5 font-semibold text-hueso"
+                className="rounded-full bg-hueso px-3 py-1.5 font-semibold text-sello-oscuro"
               >
                 Sí, reiniciar
               </button>
               <button
                 onClick={() => setConfirmandoReinicio(false)}
-                className="rounded-full border border-tinta/20 px-3 py-1.5 text-tinta/70"
+                className="rounded-full border border-hueso/30 px-3 py-1.5 text-hueso/80"
               >
                 Cancelar
               </button>
@@ -82,51 +79,55 @@ export function Admin() {
           ) : (
             <button
               onClick={() => setConfirmandoReinicio(true)}
-              className="rounded-full border border-tinta/15 px-4 py-2 font-sans text-xs font-medium text-tinta/60 transition hover:border-tinta/30 hover:text-tinta"
+              className="rounded-full border border-hueso/25 px-4 py-2 font-sans text-xs font-medium text-hueso/90 transition hover:bg-hueso/10"
             >
               Reiniciar datos de demo
             </button>
           )}
         </div>
-      </header>
 
-      <main className="mx-auto max-w-6xl px-6 sm:px-10">
-        <h1 className="font-display text-3xl font-semibold text-tinta sm:text-4xl">
-          Panel administrador
-        </h1>
-        <p className="mt-2 font-sans text-tinta/60">
-          Vistazo del mes, un clic para registrar cada pago.
-        </p>
+        <div className="mx-auto mt-8 max-w-6xl">
+          <Logo tono="oscuro" />
+          <div className="mt-6 flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <h1 className="font-display text-3xl font-semibold text-hueso sm:text-4xl">
+                Panel administrador
+              </h1>
+              <p className="mt-1.5 font-sans text-sm text-hueso/60">
+                Vistazo del mes, un clic para registrar cada pago.
+              </p>
+            </div>
+            <span className="font-mono text-xs uppercase tracking-[0.14em] text-hueso/50">
+              {formatoMes(mes)}
+            </span>
+          </div>
+        </div>
+      </div>
 
-        <section className="mt-8 grid gap-4 sm:grid-cols-3">
-          <Card className="p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-grafito">
-              Cobrado este mes
-            </p>
-            <p className="mt-2 tabular font-display text-3xl font-semibold text-verde-recibo">
-              {formatoMoneda(cobradoEsteMes)}
-            </p>
-          </Card>
-          <Card className="p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-grafito">
-              Falta cobrar este mes
-            </p>
-            <p className="mt-2 tabular font-display text-3xl font-semibold text-sello">
-              {formatoMoneda(pendienteDeCobro)}
-            </p>
-          </Card>
-          <Card className="p-6">
-            <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-grafito">
-              Propiedades
-            </p>
-            <p className="mt-2 font-display text-3xl font-semibold text-tinta">
-              {filas.length}
-              <span className="ml-2 font-sans text-sm font-normal text-tinta/50">
-                ({filas.filter((f) => f.estado === "al-dia").length} al día)
-              </span>
-            </p>
-          </Card>
-        </section>
+      <main className="relative z-10 mx-auto -mt-16 max-w-6xl px-6 sm:px-10">
+        <div className="rounded-3xl border border-grafito-suave/60 bg-hueso p-4 shadow-[0_20px_40px_-24px_rgba(20,43,61,0.35)] sm:p-5">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <StatTile
+              Icono={IconRecibo}
+              tono="verde"
+              etiqueta="Cobrado este mes"
+              valor={formatoMoneda(cobradoEsteMes)}
+            />
+            <StatTile
+              Icono={IconAlertaCirculo}
+              tono="sello"
+              etiqueta="Falta cobrar este mes"
+              valor={formatoMoneda(pendienteDeCobro)}
+            />
+            <StatTile
+              Icono={IconCasa}
+              tono="tinta"
+              etiqueta="Propiedades"
+              valor={String(filas.length)}
+              nota={`${alDia} al día`}
+            />
+          </div>
+        </div>
 
         {(enMora.length > 0 || contratosPorVencer.length > 0) && (
           <section className="mt-10">
@@ -137,9 +138,11 @@ export function Admin() {
               {enMora.map(({ prop }) => (
                 <div
                   key={prop.id}
-                  className="flex items-start gap-3 rounded-xl border border-sello/30 bg-sello-suave/15 px-4 py-3"
+                  className="flex items-start gap-3 rounded-xl border border-sello/25 bg-sello-suave/15 px-4 py-3.5"
                 >
-                  <StampBadge estado="mora" />
+                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-sello-suave/30">
+                    <IconAlertaCirculo className="h-[18px] w-[18px] text-sello" />
+                  </span>
                   <p className="font-sans text-sm text-tinta/80">
                     <strong className="font-semibold">{prop.inquilino}</strong>{" "}
                     no pagó el alquiler de {prop.direccion} este mes.
@@ -149,10 +152,10 @@ export function Admin() {
               {contratosPorVencer.map(({ prop, diasContrato }) => (
                 <div
                   key={prop.id}
-                  className="flex items-start gap-3 rounded-xl border border-ambar/30 bg-ambar-suave/25 px-4 py-3"
+                  className="flex items-start gap-3 rounded-xl border border-ambar/25 bg-ambar-suave/25 px-4 py-3.5"
                 >
-                  <span className="mt-0.5 inline-flex shrink-0 rounded-full border-2 border-dashed border-ambar px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.1em] text-ambar">
-                    Contrato
+                  <span className="mt-0.5 inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-ambar-suave">
+                    <IconCalendario className="h-[18px] w-[18px] text-ambar" />
                   </span>
                   <p className="font-sans text-sm text-tinta/80">
                     El contrato de <strong className="font-semibold">{prop.inquilino}</strong> en{" "}
@@ -179,7 +182,7 @@ export function Admin() {
                 className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6"
               >
                 <div className="flex items-center gap-4">
-                  <StampBadge estado={estado} />
+                  <StatusPill estado={estado} />
                   <div>
                     <p className="font-display text-base font-semibold text-tinta">
                       {prop.direccion}
@@ -210,7 +213,7 @@ export function Admin() {
                   ) : (
                     <button
                       onClick={() => registrarPago(prop.id, prop.alquilerMensual)}
-                      className="whitespace-nowrap rounded-full bg-tinta px-4 py-2 font-sans text-xs font-semibold text-hueso transition hover:bg-tinta-suave"
+                      className="whitespace-nowrap rounded-full bg-sello-oscuro px-4 py-2 font-sans text-xs font-semibold text-hueso transition hover:bg-sello"
                     >
                       Registrar pago
                     </button>
