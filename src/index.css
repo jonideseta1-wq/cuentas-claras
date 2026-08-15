@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+@theme {
+  /* Paleta "Cuentas Claras" — ledger de recibos, no template de IA */
+  --color-tinta: #142b3d;
+  --color-tinta-suave: #24435c;
+  --color-papel: #eef1ec;
+  --color-hueso: #faf9f4;
+  --color-sello: #a63d40;
+  --color-sello-suave: #c25c5f;
+  --color-verde-recibo: #2e6f5e;
+  --color-verde-recibo-suave: #dbe9e2;
+  --color-ambar: #c98a2b;
+  --color-ambar-suave: #f2e3c6;
+  --color-grafito: #6b6b62;
+  --color-grafito-suave: #d8d6cb;
+
+  --font-display: "Fraunces", "Iowan Old Style", serif;
+  --font-sans: "IBM Plex Sans", system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-grafito-suave);
+  }
+
+  html {
+    color-scheme: light;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-papel);
+    color: var(--color-tinta);
+    font-family: var(--font-sans);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(20, 43, 61, 0.055) 1px, transparent 0);
+    background-size: 22px 22px;
+  }
+
+  ::selection {
+    background: var(--color-sello);
+    color: var(--color-hueso);
+  }
+}
+
+@layer utilities {
+  /* Borde perforado estilo talón de recibo */
+  .borde-perforado {
+    position: relative;
+  }
+  .borde-perforado::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background-image: repeating-linear-gradient(
+      to right,
+      var(--color-papel) 0,
+      var(--color-papel) 6px,
+      transparent 6px,
+      transparent 14px
+    );
+    background-position: bottom;
+    background-size: 100% 2px;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
