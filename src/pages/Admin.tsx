@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
-import { Link } from "react-router-dom";
 import { Logo } from "../components/Logo";
+import { BackLink } from "../components/BackLink";
 import { Card } from "../components/Card";
 import { StampBadge } from "../components/StampBadge";
 import { useDatos } from "../state/DataContext";
@@ -52,9 +52,10 @@ export function Admin() {
   return (
     <div className="min-h-svh pb-20">
       <header className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-4 px-6 py-7 sm:px-10">
-        <Link to="/">
+        <div className="flex flex-col items-start gap-2">
+          <BackLink />
           <Logo />
-        </Link>
+        </div>
         <div className="flex items-center gap-3">
           <span className="font-mono text-xs uppercase tracking-[0.12em] text-tinta/45">
             {formatoMes(mes)}

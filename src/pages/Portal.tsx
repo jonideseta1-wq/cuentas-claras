@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from "react";
 import type { KeyboardEvent } from "react";
-import { Link } from "react-router-dom";
 import { Logo } from "../components/Logo";
+import { BackLink } from "../components/BackLink";
 import { Card } from "../components/Card";
 import { StampBadge } from "../components/StampBadge";
 import { ReceiptRow } from "../components/ReceiptRow";
@@ -103,9 +103,10 @@ export function Portal() {
   if (!propiedad) {
     return (
       <div className="flex min-h-svh flex-col items-center justify-center px-6">
-        <Link to="/" className="mb-10">
+        <div className="mb-10 flex flex-col items-center gap-2">
+          <BackLink />
           <Logo />
-        </Link>
+        </div>
         <Card className="w-full max-w-sm p-8 text-center">
           <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-grafito">
             Portal del inquilino
@@ -148,9 +149,10 @@ export function Portal() {
   return (
     <div className="min-h-svh pb-20">
       <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-7 sm:px-10">
-        <Link to="/">
+        <div className="flex flex-col items-start gap-2">
+          <BackLink />
           <Logo />
-        </Link>
+        </div>
         <button
           onClick={() => {
             setPropiedadId(null);
