@@ -1,26 +1,24 @@
 @import "tailwindcss";
 
 @theme {
-  /* Paleta "Cuentas Claras" — índigo, lila y mostaza. Nada de verde/teal
-     ni rojo/marrón como color dominante: eso queda acotado a los estados. */
-  --color-tinta: #2a2354;
-  --color-tinta-suave: #453a7d;
-  --color-lila: #6c5fb0;
-  --color-lila-suave: #eae6f7;
-  --color-mostaza: #c08e1f;
-  --color-mostaza-suave: #f3e6c2;
-  --color-papel: #f3f1ea;
-  --color-hueso: #fbfaf6;
-  --color-grafito: #6e6b78;
-  --color-grafito-suave: #dad7e0;
+  /* Paleta "Cuentas Claras" v3 — dashboard SaaS: base neutra cálida,
+     un único acento (mostaza/dorado), usado con criterio. */
+  --color-tinta: #262420;
+  --color-tinta-suave: #4a4640;
+  --color-mostaza: #cc9a35;
+  --color-mostaza-suave: #f5eac9;
+  --color-papel: #f5f3ee;
+  --color-hueso: #ffffff;
+  --color-grafito: #716c60;
+  --color-grafito-suave: #e4e0d5;
 
-  /* Estados de pago — acotados a badges puntuales, no son color de marca */
-  --color-verde-recibo: #2e6f5e;
-  --color-verde-recibo-suave: #dbe9e2;
-  --color-ambar: #b5762a;
-  --color-ambar-suave: #f0dfc0;
-  --color-mora: #b5443a;
-  --color-mora-suave: #f3d9d5;
+  /* Estados de pago — semántica propia, independiente del acento de marca */
+  --color-verde-recibo: #2e7d5b;
+  --color-verde-recibo-suave: #dceee4;
+  --color-ambar: #b3691e;
+  --color-ambar-suave: #f1dfc2;
+  --color-mora: #c0392b;
+  --color-mora-suave: #f6ded9;
 
   --font-display: "Fraunces", "Iowan Old Style", serif;
   --font-sans: "IBM Plex Sans", system-ui, sans-serif;
@@ -41,14 +39,11 @@
     background-color: var(--color-papel);
     color: var(--color-tinta);
     font-family: var(--font-sans);
-    background-image:
-      radial-gradient(circle at 1px 1px, rgba(42, 35, 84, 0.05) 1px, transparent 0);
-    background-size: 22px 22px;
   }
 
   ::selection {
-    background: var(--color-tinta);
-    color: var(--color-hueso);
+    background: var(--color-mostaza);
+    color: var(--color-tinta);
   }
 }
 

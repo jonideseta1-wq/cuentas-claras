@@ -7,7 +7,7 @@ import { StatusPill } from "../components/StatusPill";
 import { StatTile } from "../components/StatTile";
 import { ContratoProgreso } from "../components/ContratoProgreso";
 import { ReceiptRow } from "../components/ReceiptRow";
-import { IlustracionPropiedad } from "../components/IlustracionPropiedad";
+import { InicialesAvatar } from "../components/InicialesAvatar";
 import { NavInferior } from "../components/NavInferior";
 import type { VistaPortal } from "../components/NavInferior";
 import { useDatos } from "../state/DataContext";
@@ -226,31 +226,31 @@ export function Portal() {
   const hayAvisos = avisos.length > 0;
 
   return (
-    <div className="min-h-svh">
-      <div className="bg-tinta px-6 pb-24 pt-7 sm:px-10">
+    <div className="min-h-svh bg-papel">
+      <div className="border-b border-grafito-suave bg-hueso px-6 pt-7 sm:px-10">
         <div className="mx-auto flex max-w-3xl items-center justify-between">
-          <BackLink tono="oscuro" />
+          <BackLink />
           <button
             onClick={salir}
-            className="rounded-full border border-hueso/25 px-4 py-2 font-sans text-xs font-medium text-hueso/90 transition hover:bg-hueso/10"
+            className="rounded-full border border-grafito-suave px-4 py-2 font-sans text-xs font-medium text-tinta/65 transition hover:border-tinta/25 hover:text-tinta"
           >
             Salir
           </button>
         </div>
 
-        <div className="mx-auto mt-8 max-w-3xl">
-          <Logo tono="oscuro" />
+        <div className="mx-auto mt-8 max-w-3xl pb-7">
+          <Logo />
           <div className="mt-6 flex flex-wrap items-start justify-between gap-4">
             <div className="flex items-center gap-4">
-              <IlustracionPropiedad
-                seed={propiedad.id}
-                className="h-16 w-16 shrink-0 rounded-2xl"
+              <InicialesAvatar
+                nombre={propiedad.inquilino}
+                className="h-16 w-16 rounded-2xl text-lg"
               />
               <div>
-                <h1 className="font-display text-3xl font-semibold text-hueso sm:text-4xl">
+                <h1 className="font-display text-3xl font-semibold text-tinta sm:text-4xl">
                   Hola, {propiedad.inquilino.split(" ")[0]}
                 </h1>
-                <p className="mt-1.5 font-sans text-sm text-hueso/60">
+                <p className="mt-1.5 font-sans text-sm text-tinta/55">
                   {propiedad.direccion} {propiedad.unidad}
                 </p>
               </div>
@@ -260,7 +260,7 @@ export function Portal() {
         </div>
       </div>
 
-      <main className="relative z-10 mx-auto -mt-16 max-w-3xl px-6 pb-28 sm:px-10">
+      <main className="mx-auto max-w-3xl px-6 pb-28 pt-8 sm:px-10">
         {vista === "inicio" && (
           <>
             <TarjetaFlotante>
@@ -273,7 +273,7 @@ export function Portal() {
                 />
                 <StatTile
                   Icono={IconContrato}
-                  tono="tinta"
+                  tono="neutro"
                   etiqueta="Contrato"
                   valor={`${mesesRestantesContrato(propiedad.contratoFin)} meses`}
                   nota="restantes"
@@ -286,7 +286,7 @@ export function Portal() {
                 />
                 <StatTile
                   Icono={IconTendencia}
-                  tono="lila"
+                  tono="neutro"
                   etiqueta="Frecuencia de ajuste"
                   valor={FRECUENCIA_AJUSTE}
                 />

@@ -1,8 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 
 const TONOS = {
-  tinta: { fondo: "bg-tinta/[0.08]", texto: "text-tinta" },
-  lila: { fondo: "bg-lila-suave", texto: "text-lila" },
+  neutro: { fondo: "bg-grafito-suave/50", texto: "text-tinta/70" },
   mostaza: { fondo: "bg-mostaza-suave", texto: "text-mostaza" },
   verde: { fondo: "bg-verde-recibo-suave", texto: "text-verde-recibo" },
 } as const;

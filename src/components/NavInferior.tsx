@@ -32,7 +32,7 @@ export function NavInferior({
             >
               <span className="relative">
                 <Icono
-                  className={`h-5 w-5 ${activo ? "text-tinta" : "text-grafito/70"}`}
+                  className={`h-5 w-5 ${activo ? "text-mostaza" : "text-grafito/70"}`}
                 />
                 {v === "avisos" && hayAvisos && (
                   <span className="absolute -right-1 -top-1 h-2 w-2 rounded-full bg-mora" />
@@ -46,7 +46,7 @@ export function NavInferior({
                 {etiqueta}
               </span>
               {activo && (
-                <span className="absolute -top-px h-0.5 w-8 rounded-full bg-tinta" />
+                <span className="absolute -top-px h-0.5 w-8 rounded-full bg-mostaza" />
               )}
             </button>
           );

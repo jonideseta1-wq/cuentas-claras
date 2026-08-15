@@ -45,7 +45,7 @@ export function Landing() {
       <main className="mx-auto max-w-6xl px-6 sm:px-10">
         <section className="grid items-center gap-14 py-10 sm:py-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
           <div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-lila/30 bg-lila-suave px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-lila">
+            <span className="inline-flex items-center gap-2 rounded-full border border-mostaza/30 bg-mostaza-suave px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-mostaza">
               Gestión de alquileres, sin planillas sueltas
             </span>
             <h1 className="mt-6 font-display text-[2.75rem] font-semibold leading-[1.05] tracking-tight text-tinta sm:text-6xl">
@@ -59,7 +59,7 @@ export function Landing() {
             <div className="mt-9 flex flex-wrap items-center gap-4">
               <Link
                 to="/admin"
-                className="rounded-full bg-tinta px-6 py-3 font-sans text-sm font-semibold text-hueso shadow-[0_10px_24px_-10px_rgba(42,35,84,0.55)] transition hover:bg-tinta-suave"
+                className="rounded-full bg-mostaza px-6 py-3 font-sans text-sm font-semibold text-tinta shadow-[0_10px_24px_-10px_rgba(204,154,53,0.55)] transition hover:bg-mostaza/85"
               >
                 Entrar al panel administrador
               </Link>
@@ -120,7 +120,7 @@ export function Landing() {
           <div className="mt-10 grid gap-8 sm:grid-cols-3">
             {PASOS.map((paso) => (
               <div key={paso.numero}>
-                <span className="font-mono text-sm font-semibold text-lila">
+                <span className="font-mono text-sm font-semibold text-mostaza">
                   {paso.numero}
                 </span>
                 <h3 className="mt-3 font-display text-lg font-semibold text-tinta">
