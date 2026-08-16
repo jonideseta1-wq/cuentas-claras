@@ -1,5 +1,12 @@
 export type EstadoPago = "al-dia" | "pendiente" | "mora";
 
+export type TipoServicio = "agua" | "luz" | "gas" | "internet";
+
+export interface Servicio {
+  tipo: TipoServicio;
+  monto: number;
+}
+
 export interface Propiedad {
   id: string;
   direccion: string;
@@ -10,6 +17,7 @@ export interface Propiedad {
   diaVencimiento: number; // día del mes en que vence el pago
   contratoInicio: string; // ISO date
   contratoFin: string; // ISO date
+  servicios: Servicio[]; // servicios compartidos que se dividen por unidad
 }
 
 export interface Pago {

@@ -4,7 +4,9 @@ import type { CargoEspecial, DatosApp, Pago } from "../types";
 import { DATOS_INICIALES } from "../data/mockData";
 import { mesActual } from "../lib/utils";
 
-const CLAVE_STORAGE = "cuentas-claras:datos";
+// v2: agrega "servicios" a Propiedad — versionado para no romper sesiones
+// que ya tenían datos guardados con el esquema anterior.
+const CLAVE_STORAGE = "cuentas-claras:datos:v2";
 
 function cargarDatos(): DatosApp {
   try {

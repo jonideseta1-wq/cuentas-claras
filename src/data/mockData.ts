@@ -13,6 +13,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 10,
       contratoInicio: "2025-04-01",
       contratoFin: "2027-03-31",
+      servicios: [
+        { tipo: "agua", monto: 9000 },
+        { tipo: "luz", monto: 15000 },
+        { tipo: "gas", monto: 7000 },
+        { tipo: "internet", monto: 12000 },
+      ],
     },
     {
       id: "p2",
@@ -24,6 +30,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 5,
       contratoInicio: "2024-10-01",
       contratoFin: "2026-09-30",
+      servicios: [
+        { tipo: "agua", monto: 8500 },
+        { tipo: "luz", monto: 18000 },
+        { tipo: "gas", monto: 9000 },
+        { tipo: "internet", monto: 11000 },
+      ],
     },
     {
       id: "p3",
@@ -35,6 +47,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 27,
       contratoInicio: "2025-02-01",
       contratoFin: "2027-01-31",
+      servicios: [
+        { tipo: "agua", monto: 9500 },
+        { tipo: "luz", monto: 16000 },
+        { tipo: "gas", monto: 8000 },
+        { tipo: "internet", monto: 12000 },
+      ],
     },
     {
       id: "p4",
@@ -46,6 +64,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 10,
       contratoInicio: "2024-11-01",
       contratoFin: "2026-10-05",
+      servicios: [
+        { tipo: "agua", monto: 7000 },
+        { tipo: "luz", monto: 13000 },
+        { tipo: "gas", monto: 6500 },
+        { tipo: "internet", monto: 10000 },
+      ],
     },
     {
       id: "p5",
@@ -57,6 +81,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 1,
       contratoInicio: "2025-09-01",
       contratoFin: "2026-08-31",
+      servicios: [
+        { tipo: "agua", monto: 10000 },
+        { tipo: "luz", monto: 19000 },
+        { tipo: "gas", monto: 8500 },
+        { tipo: "internet", monto: 13000 },
+      ],
     },
     {
       id: "p6",
@@ -68,6 +98,12 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 29,
       contratoInicio: "2025-06-01",
       contratoFin: "2027-05-31",
+      servicios: [
+        { tipo: "agua", monto: 8000 },
+        { tipo: "luz", monto: 14000 },
+        { tipo: "gas", monto: 7500 },
+        { tipo: "internet", monto: 11000 },
+      ],
     },
   ],
   pagos: [
@@ -114,14 +150,6 @@ export const DATOS_INICIALES: DatosApp = {
       monto: 18000,
       pagado: false,
       fecha: "2026-08-05",
-    },
-    {
-      id: "c3",
-      propiedadId: "p1",
-      descripcion: "Service de aire acondicionado",
-      monto: 22000,
-      pagado: true,
-      fecha: "2026-07-15",
     },
   ],
 };

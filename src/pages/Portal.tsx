@@ -28,11 +28,23 @@ import {
   IconCheckCirculo,
   IconContrato,
   IconDocumento,
+  IconGota,
+  IconLlama,
   IconLlave,
+  IconRayo,
   IconRecibo,
   IconRelojCirculo,
   IconTendencia,
+  IconWifi,
 } from "../components/icons";
+import type { TipoServicio } from "../types";
+
+const SERVICIO_INFO: Record<TipoServicio, { etiqueta: string; Icono: typeof IconGota }> = {
+  agua: { etiqueta: "Agua", Icono: IconGota },
+  luz: { etiqueta: "Luz", Icono: IconRayo },
+  gas: { etiqueta: "Gas", Icono: IconLlama },
+  internet: { etiqueta: "Internet", Icono: IconWifi },
+};
 
 function PinInput({
   valor,
@@ -191,6 +203,7 @@ export function Portal() {
   const estado = estadoPropiedad(propiedad, datos.pagos);
   const cargosPendientes = cargos.filter((c) => !c.pagado);
   const subtotalPendiente = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
+  const subtotalServicios = propiedad.servicios.reduce((acc, s) => acc + s.monto, 0);
   const diasContrato = diasHastaVencimientoContrato(propiedad.contratoFin);
 
   const avisos: Array<{
@@ -321,6 +334,46 @@ export function Portal() {
                     {formatoMoneda(propiedad.alquilerMensual)}
                   </span>
                 </div>
+
+                {propiedad.servicios.length > 0 && (
+                  <>
+                    <div className="flex items-center gap-2 border-y border-grafito-suave/70 bg-papel/60 px-5 py-2.5">
+                      <IconRayo className="h-4 w-4 text-tinta/50" />
+                      <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-tinta/50">
+                        Servicios
+                      </span>
+                    </div>
+                    <div className="divide-y divide-dashed divide-grafito-suave">
+                      {propiedad.servicios.map((s) => {
+                        const { etiqueta, Icono } = SERVICIO_INFO[s.tipo];
+                        return (
+                          <div
+                            key={s.tipo}
+                            className="flex items-center justify-between gap-4 px-5 py-3.5"
+                          >
+                            <span className="flex items-center gap-3">
+                              <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-papel">
+                                <Icono className="h-4 w-4 text-tinta/60" />
+                              </span>
+                              <span className="font-sans text-sm text-tinta/80">{etiqueta}</span>
+                            </span>
+                            <span className="tabular font-mono text-sm font-semibold text-tinta">
+                              {formatoMoneda(s.monto)}
+                            </span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                    <div className="flex items-center justify-between bg-papel/60 px-5 py-3">
+                      <span className="font-sans text-xs font-semibold uppercase tracking-[0.08em] text-tinta/45">
+                        Subtotal servicios
+                      </span>
+                      <span className="tabular font-mono text-sm font-semibold text-tinta/70">
+                        {formatoMoneda(subtotalServicios)}
+                      </span>
+                    </div>
+                  </>
+                )}
 
                 {cargos.length > 0 && (
                   <>

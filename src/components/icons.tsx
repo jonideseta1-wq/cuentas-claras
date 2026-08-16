@@ -133,3 +133,39 @@ export function IconDocumento(props: IconProps) {
     </svg>
   );
 }
+
+export function IconGota(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M10 2.6c2.6 3.4 5 6.5 5 9.4a5 5 0 0 1-10 0c0-2.9 2.4-6 5-9.4Z" />
+      <path d="M7.6 12.2a2.4 2.4 0 0 0 2.1 2.4" />
+    </svg>
+  );
+}
+
+export function IconRayo(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M11.1 2.6 5.4 11h3.8l-1.1 6.4L14 9h-3.8l0.9-6.4Z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+export function IconLlama(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M10 2.8c.4 2.2 1.9 3.4 3 4.7a5.1 5.1 0 0 1 1.2 3.3 4.2 4.2 0 0 1-8.4 0c0-1 .3-1.7.9-2.5.2.9.8 1.5 1.5 1.5.9 0 1-1 .7-1.8-.5-1.4-.3-3.4.9-5.2Z" />
+    </svg>
+  );
+}
+
+export function IconWifi(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M3.2 8.2a9.6 9.6 0 0 1 13.6 0" />
+      <path d="M5.9 11a5.9 5.9 0 0 1 8.2 0" />
+      <path d="M8.6 13.7a2.2 2.2 0 0 1 2.8 0" />
+      <circle cx="10" cy="16" r="0.15" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
