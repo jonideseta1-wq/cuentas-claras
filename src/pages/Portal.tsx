@@ -204,6 +204,7 @@ export function Portal() {
   const cargosPendientes = cargos.filter((c) => !c.pagado);
   const subtotalPendiente = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
   const subtotalServicios = propiedad.servicios.reduce((acc, s) => acc + s.monto, 0);
+  const totalAAbonar = propiedad.alquilerMensual + subtotalServicios + subtotalPendiente;
   const diasContrato = diasHastaVencimientoContrato(propiedad.contratoFin);
 
   const avisos: Array<{
@@ -276,6 +277,27 @@ export function Portal() {
       <main className="mx-auto max-w-3xl px-6 pb-28 pt-8 sm:px-10">
         {vista === "inicio" && (
           <>
+            <div className="rounded-2xl border border-mostaza/25 bg-mostaza-suave/40 p-6">
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-tinta/50">
+                Total a abonar este mes
+              </p>
+              <p className="tabular mt-1 font-display text-4xl font-semibold text-tinta">
+                {formatoMoneda(totalAAbonar)}
+              </p>
+              <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 font-sans text-xs text-tinta/60">
+                <span>Alquiler {formatoMoneda(propiedad.alquilerMensual)}</span>
+                <span className="text-tinta/30">+</span>
+                <span>Servicios {formatoMoneda(subtotalServicios)}</span>
+                {subtotalPendiente > 0 && (
+                  <>
+                    <span className="text-tinta/30">+</span>
+                    <span>Cargos pendientes {formatoMoneda(subtotalPendiente)}</span>
+                  </>
+                )}
+              </div>
+            </div>
+
+            <div className="mt-8">
             <TarjetaFlotante>
               <div className="grid grid-cols-2 gap-3">
                 <StatTile
@@ -305,6 +327,7 @@ export function Portal() {
                 />
               </div>
             </TarjetaFlotante>
+            </div>
 
             <section className="mt-8">
               <Card className="p-6">
