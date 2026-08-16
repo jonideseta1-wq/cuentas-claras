@@ -47,12 +47,44 @@ export function estadoPropiedad(propiedad: Propiedad, pagos: Pago[]): EstadoPago
   return "pendiente";
 }
 
-export function diasHastaVencimientoContrato(contratoFin: string): number {
-  const fin = parseFechaISO(contratoFin);
+export function diasHasta(fechaISO: string): number {
+  const objetivo = parseFechaISO(fechaISO);
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
   const msPorDia = 1000 * 60 * 60 * 24;
-  return Math.round((fin.getTime() - hoy.getTime()) / msPorDia);
+  return Math.round((objetivo.getTime() - hoy.getTime()) / msPorDia);
+}
+
+export function diasHastaVencimientoContrato(contratoFin: string): number {
+  return diasHasta(contratoFin);
+}
+
+// Próxima fecha de vencimiento mensual del alquiler a partir de hoy (para el
+// estado "al día", cuando ya no queda nada pendiente este mes).
+export function proximoVencimientoMensual(diaVencimiento: number): string {
+  const hoy = new Date();
+  let anio = hoy.getFullYear();
+  let mes = hoy.getMonth();
+  if (hoy.getDate() > diaVencimiento) {
+    mes += 1;
+    if (mes > 11) {
+      mes = 0;
+      anio += 1;
+    }
+  }
+  const diasEnMes = new Date(anio, mes + 1, 0).getDate();
+  const dia = Math.min(diaVencimiento, diasEnMes);
+  return `${anio}-${String(mes + 1).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+}
+
+export function descargarTexto(nombreArchivo: string, contenido: string): void {
+  const blob = new Blob([contenido], { type: "text/plain;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const enlace = document.createElement("a");
+  enlace.href = url;
+  enlace.download = nombreArchivo;
+  enlace.click();
+  URL.revokeObjectURL(url);
 }
 
 export function mesesRestantesContrato(contratoFin: string): number {

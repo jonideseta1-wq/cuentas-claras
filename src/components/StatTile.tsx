@@ -1,7 +1,7 @@
 import type { ComponentType, SVGProps } from "react";
 
 const TONOS = {
-  neutro: { fondo: "bg-grafito-suave/50", texto: "text-tinta/70" },
+  neutro: { fondo: "bg-grafito-suave/60", texto: "text-tinta/80" },
   mostaza: { fondo: "bg-mostaza-suave", texto: "text-mostaza" },
   verde: { fondo: "bg-verde-recibo-suave", texto: "text-verde-recibo" },
 } as const;
@@ -26,7 +26,7 @@ export function StatTile({
         <Icono className={`h-[18px] w-[18px] ${t.texto}`} />
       </span>
       <p className="mt-3 font-sans text-xs text-tinta/50">{etiqueta}</p>
-      <p className="mt-0.5 font-display text-xl font-semibold leading-tight text-tinta">
+      <p className="tabular mt-0.5 font-mono text-xl font-semibold leading-tight text-tinta">
         {valor}
       </p>
       {nota && <p className="mt-0.5 font-sans text-[11px] text-tinta/40">{nota}</p>}
