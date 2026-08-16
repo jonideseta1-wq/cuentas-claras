@@ -7,7 +7,7 @@ import { StatusPill } from "../components/StatusPill";
 import { InicialesAvatar } from "../components/InicialesAvatar";
 import { ReceiptRow } from "../components/ReceiptRow";
 import { useDatos } from "../state/DataContext";
-import type { EstadoPago, Pago, Propiedad } from "../types";
+import type { CargoEspecial, EstadoPago, Pago, Propiedad } from "../types";
 import {
   diasHastaVencimientoContrato,
   estadoPropiedad,
@@ -17,13 +17,27 @@ import {
   mesActual,
   porcentajeContratoCompletado,
 } from "../lib/utils";
-import { IconAlertaCirculo, IconCalendario, IconCasa, IconRecibo } from "../components/icons";
+import {
+  IconAlertaCirculo,
+  IconCalendario,
+  IconCasa,
+  IconContrato,
+  IconRecibo,
+  IconRelojCirculo,
+} from "../components/icons";
+
+const BORDE_ESTADO: Record<EstadoPago, string> = {
+  "al-dia": "border-l-verde-recibo",
+  pendiente: "border-l-ambar",
+  mora: "border-l-mora",
+};
 
 function TarjetaPropiedad({
   prop,
   estado,
   ultimoPago,
   pagos,
+  cargosPendientes,
   expandido,
   onToggleExpandir,
   onRegistrarPago,
@@ -32,14 +46,18 @@ function TarjetaPropiedad({
   estado: EstadoPago;
   ultimoPago?: Pago;
   pagos: Pago[];
+  cargosPendientes: CargoEspecial[];
   expandido: boolean;
   onToggleExpandir: () => void;
   onRegistrarPago: () => void;
 }) {
   const pct = porcentajeContratoCompletado(prop.contratoInicio, prop.contratoFin);
+  const subtotalCargos = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
 
   return (
-    <div className="rounded-2xl border border-grafito-suave bg-hueso p-5 shadow-sm">
+    <div
+      className={`rounded-2xl border-y border-r border-l-4 border-y-grafito-suave border-r-grafito-suave bg-hueso p-5 shadow-sm transition hover:shadow-md ${BORDE_ESTADO[estado]}`}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
           <InicialesAvatar nombre={prop.inquilino} className="h-12 w-12 text-sm" />
@@ -56,47 +74,73 @@ function TarjetaPropiedad({
         <StatusPill estado={estado} />
       </div>
 
+      <div className="mt-4 flex items-center gap-4 rounded-xl bg-papel px-3.5 py-3">
+        <IconRecibo className="h-4 w-4 shrink-0 text-tinta/35" />
+        <div className="flex flex-1 items-center justify-between gap-2">
+          <div>
+            <p className="tabular font-mono text-lg font-semibold text-tinta">
+              {formatoMoneda(prop.alquilerMensual)}
+            </p>
+            <p className="font-sans text-xs text-tinta/40">
+              vence el día {prop.diaVencimiento} de cada mes
+            </p>
+          </div>
+          {ultimoPago && (
+            <p className="text-right font-sans text-xs text-tinta/40">
+              último pago
+              <br />
+              {formatoFecha(ultimoPago.fecha)}
+            </p>
+          )}
+        </div>
+      </div>
+
       <div className="mt-4">
         <div className="flex items-center justify-between font-sans text-[11px] text-tinta/40">
-          <span>Contrato transcurrido</span>
-          <span className="font-mono">{pct}%</span>
+          <span className="flex items-center gap-1.5">
+            <IconContrato className="h-3.5 w-3.5" />
+            Contrato transcurrido
+          </span>
+          <span className="font-mono">
+            {pct}% · vence {formatoFecha(prop.contratoFin)}
+          </span>
         </div>
         <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-grafito-suave">
           <div className="h-full rounded-full bg-tinta/60" style={{ width: `${pct}%` }} />
         </div>
       </div>
 
-      <div className="mt-4 flex items-center justify-between border-t border-grafito-suave pt-4">
-        <div>
-          <p className="tabular font-mono text-lg font-semibold text-tinta">
-            {formatoMoneda(prop.alquilerMensual)}
+      {cargosPendientes.length > 0 && (
+        <div className="mt-3 flex items-center gap-2.5 rounded-xl bg-ambar-suave/50 px-3.5 py-2.5">
+          <IconRelojCirculo className="h-4 w-4 shrink-0 text-ambar" />
+          <p className="font-sans text-xs font-medium text-ambar">
+            {cargosPendientes.length === 1
+              ? "1 cargo especial pendiente"
+              : `${cargosPendientes.length} cargos especiales pendientes`}{" "}
+            · {formatoMoneda(subtotalCargos)}
           </p>
-          {ultimoPago && (
-            <p className="font-sans text-xs text-tinta/40">
-              último pago {formatoFecha(ultimoPago.fecha)}
-            </p>
-          )}
         </div>
-        <div className="flex items-center gap-2">
+      )}
+
+      <div className="mt-4 flex items-center justify-between border-t border-grafito-suave pt-4">
+        <button
+          onClick={onToggleExpandir}
+          className="rounded-full border border-grafito-suave px-3.5 py-2 font-sans text-xs font-semibold text-tinta/70 transition hover:border-tinta/25 hover:text-tinta"
+        >
+          {expandido ? "Ocultar historial" : "Ver historial"}
+        </button>
+        {estado === "al-dia" ? (
+          <span className="whitespace-nowrap rounded-full bg-verde-recibo-suave px-3.5 py-2 font-sans text-xs font-semibold text-verde-recibo">
+            Pagado este mes
+          </span>
+        ) : (
           <button
-            onClick={onToggleExpandir}
-            className="rounded-full border border-grafito-suave px-3.5 py-2 font-sans text-xs font-semibold text-tinta/70 transition hover:border-tinta/25 hover:text-tinta"
+            onClick={onRegistrarPago}
+            className="whitespace-nowrap rounded-full bg-mostaza px-3.5 py-2 font-sans text-xs font-semibold text-tinta transition hover:bg-mostaza/85"
           >
-            {expandido ? "Ocultar" : "Ver"}
+            Registrar pago
           </button>
-          {estado === "al-dia" ? (
-            <span className="whitespace-nowrap rounded-full bg-verde-recibo-suave px-3.5 py-2 font-sans text-xs font-semibold text-verde-recibo">
-              Pagado
-            </span>
-          ) : (
-            <button
-              onClick={onRegistrarPago}
-              className="whitespace-nowrap rounded-full bg-mostaza px-3.5 py-2 font-sans text-xs font-semibold text-tinta transition hover:bg-mostaza/85"
-            >
-              Registrar pago
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       {expandido && (
@@ -144,13 +188,16 @@ export function Admin() {
           pagos: [...datos.pagos]
             .filter((p) => p.propiedadId === prop.id)
             .sort((a, b) => b.mes.localeCompare(a.mes)),
+          cargosPendientes: datos.cargos.filter(
+            (c) => c.propiedadId === prop.id && !c.pagado
+          ),
           diasContrato: diasHastaVencimientoContrato(prop.contratoFin),
         }))
         .sort((a, b) => {
           const orden = { mora: 0, pendiente: 1, "al-dia": 2 };
           return orden[a.estado] - orden[b.estado];
         }),
-    [datos.propiedades, datos.pagos]
+    [datos.propiedades, datos.pagos, datos.cargos]
   );
 
   const cobradoEsteMes = datos.pagos
@@ -319,13 +366,14 @@ export function Admin() {
           <section id="propiedades" className="mt-10 scroll-mt-6">
             <h2 className="font-display text-xl font-semibold text-tinta">Propiedades</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {filas.map(({ prop, estado, ultimoPago, pagos }) => (
+              {filas.map(({ prop, estado, ultimoPago, pagos, cargosPendientes }) => (
                 <TarjetaPropiedad
                   key={prop.id}
                   prop={prop}
                   estado={estado}
                   ultimoPago={ultimoPago}
                   pagos={pagos}
+                  cargosPendientes={cargosPendientes}
                   expandido={expandidoId === prop.id}
                   onToggleExpandir={() =>
                     setExpandidoId(expandidoId === prop.id ? null : prop.id)
