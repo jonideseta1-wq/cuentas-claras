@@ -14,8 +14,10 @@ import {
   formatoFecha,
   formatoMes,
   formatoMoneda,
+  FRECUENCIA_AJUSTE,
   mesActual,
   porcentajeContratoCompletado,
+  proximoAjusteAlquiler,
 } from "../lib/utils";
 import { ORDEN_SERVICIOS, SERVICIO_INFO } from "../lib/servicioInfo";
 import {
@@ -39,25 +41,41 @@ function TarjetaPropiedad({
   estado,
   ultimoPago,
   pagos,
+  cargos,
   cargosPendientes,
   expandido,
   onToggleExpandir,
   onRegistrarPago,
   onActualizarServicios,
+  onMarcarCargoPagado,
+  onAgregarCargo,
 }: {
   prop: Propiedad;
   estado: EstadoPago;
   ultimoPago?: Pago;
   pagos: Pago[];
+  cargos: CargoEspecial[];
   cargosPendientes: CargoEspecial[];
   expandido: boolean;
   onToggleExpandir: () => void;
   onRegistrarPago: () => void;
   onActualizarServicios: (tipo: TipoServicio, monto: number) => void;
+  onMarcarCargoPagado: (cargoId: string) => void;
+  onAgregarCargo: (descripcion: string, monto: number) => void;
 }) {
   const pct = porcentajeContratoCompletado(prop.contratoInicio, prop.contratoFin);
   const subtotalCargos = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
   const subtotalServicios = prop.servicios.reduce((acc, s) => acc + s.monto, 0);
+  const [nuevaDescripcion, setNuevaDescripcion] = useState("");
+  const [nuevoMonto, setNuevoMonto] = useState("");
+
+  function enviarNuevoCargo() {
+    const monto = Number(nuevoMonto);
+    if (!nuevaDescripcion.trim() || !monto) return;
+    onAgregarCargo(nuevaDescripcion.trim(), monto);
+    setNuevaDescripcion("");
+    setNuevoMonto("");
+  }
 
   return (
     <div
@@ -73,7 +91,12 @@ function TarjetaPropiedad({
                 {prop.unidad}
               </span>
             </p>
-            <p className="mt-0.5 font-sans text-sm text-tinta/55">{prop.inquilino}</p>
+            <p className="mt-0.5 font-sans text-sm text-tinta/55">
+              {prop.inquilino}
+              <span className="ml-2 tabular font-mono text-xs text-tinta/35">
+                PIN {prop.pin}
+              </span>
+            </p>
           </div>
         </div>
         <StatusPill estado={estado} />
@@ -100,6 +123,38 @@ function TarjetaPropiedad({
         </div>
       </div>
 
+      <div className="mt-3">
+        <p className="flex items-center gap-1.5 font-sans text-[11px] text-tinta/40">
+          <IconRayo className="h-3.5 w-3.5" />
+          Servicios (dividí acá lo que le corresponde a esta unidad)
+        </p>
+        <div className="mt-1.5 grid grid-cols-2 gap-1.5">
+          {ORDEN_SERVICIOS.map((tipo) => {
+            const servicio = prop.servicios.find((s) => s.tipo === tipo);
+            const { etiqueta, Icono } = SERVICIO_INFO[tipo];
+            return (
+              <label
+                key={tipo}
+                className="flex items-center gap-1.5 rounded-lg border border-grafito-suave bg-papel px-2 py-1.5"
+              >
+                <Icono className="h-3.5 w-3.5 shrink-0 text-tinta/40" />
+                <span className="font-sans text-[11px] text-tinta/55">{etiqueta}</span>
+                <input
+                  type="number"
+                  min={0}
+                  value={servicio?.monto ?? 0}
+                  onChange={(e) => onActualizarServicios(tipo, Number(e.target.value) || 0)}
+                  className="tabular ml-auto w-16 rounded-md border border-grafito-suave bg-hueso px-1.5 py-1 text-right font-mono text-xs text-tinta outline-none focus:border-tinta/40"
+                />
+              </label>
+            );
+          })}
+        </div>
+        <p className="mt-1.5 text-right font-mono text-[11px] font-semibold text-tinta/50">
+          Subtotal servicios: {formatoMoneda(subtotalServicios)}
+        </p>
+      </div>
+
       <div className="mt-4">
         <div className="flex items-center justify-between font-sans text-[11px] text-tinta/40">
           <span className="flex items-center gap-1.5">
@@ -113,6 +168,10 @@ function TarjetaPropiedad({
         <div className="mt-1.5 h-1.5 w-full overflow-hidden rounded-full bg-grafito-suave">
           <div className="h-full rounded-full bg-tinta/60" style={{ width: `${pct}%` }} />
         </div>
+        <p className="mt-1.5 font-sans text-[11px] text-tinta/40">
+          Próximo ajuste: {formatoFecha(proximoAjusteAlquiler(prop.contratoInicio))} ·
+          frecuencia {FRECUENCIA_AJUSTE.toLowerCase()}
+        </p>
       </div>
 
       {cargosPendientes.length > 0 && (
@@ -126,19 +185,6 @@ function TarjetaPropiedad({
           </p>
         </div>
       )}
-
-      <button
-        onClick={onToggleExpandir}
-        className="mt-3 flex w-full items-center justify-between rounded-xl bg-papel px-3.5 py-2.5 transition hover:bg-grafito-suave/40"
-      >
-        <span className="flex items-center gap-2 font-sans text-xs text-tinta/55">
-          <IconRayo className="h-4 w-4 text-tinta/35" />
-          Servicios: {formatoMoneda(subtotalServicios)}/mes
-        </span>
-        <span className="font-sans text-xs font-medium text-tinta/45">
-          {expandido ? "Ocultar" : "Editar"}
-        </span>
-      </button>
 
       <div className="mt-4 flex items-center justify-between border-t border-grafito-suave pt-4">
         <button
@@ -164,29 +210,63 @@ function TarjetaPropiedad({
       {expandido && (
         <div className="mt-4 border-t border-dashed border-grafito-suave pt-3">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
-            Servicios (editable)
+            Cargos especiales
           </p>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            {ORDEN_SERVICIOS.map((tipo) => {
-              const servicio = prop.servicios.find((s) => s.tipo === tipo);
-              const { etiqueta, Icono } = SERVICIO_INFO[tipo];
-              return (
-                <label
-                  key={tipo}
-                  className="flex items-center gap-2 rounded-lg border border-grafito-suave px-2.5 py-2"
-                >
-                  <Icono className="h-3.5 w-3.5 shrink-0 text-tinta/40" />
-                  <span className="font-sans text-xs text-tinta/60">{etiqueta}</span>
-                  <input
-                    type="number"
-                    min={0}
-                    value={servicio?.monto ?? 0}
-                    onChange={(e) => onActualizarServicios(tipo, Number(e.target.value) || 0)}
-                    className="tabular ml-auto w-20 rounded-md border border-grafito-suave bg-papel px-1.5 py-1 text-right font-mono text-xs text-tinta outline-none focus:border-tinta/40"
-                  />
-                </label>
-              );
-            })}
+          {cargos.length === 0 ? (
+            <p className="py-2 font-sans text-xs text-tinta/45">Sin cargos cargados.</p>
+          ) : (
+            <div className="mt-1 divide-y divide-dashed divide-grafito-suave">
+              {cargos.map((c) => (
+                <div key={c.id} className="flex items-center justify-between gap-3 py-2">
+                  <div>
+                    <p className="font-sans text-xs text-tinta/70">{c.descripcion}</p>
+                    <p className="font-sans text-[11px] text-tinta/40">
+                      {formatoFecha(c.fecha)}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="tabular font-mono text-xs font-semibold text-tinta/70">
+                      {formatoMoneda(c.monto)}
+                    </span>
+                    {c.pagado ? (
+                      <span className="rounded-full bg-verde-recibo-suave px-2 py-0.5 font-sans text-[10px] font-semibold text-verde-recibo">
+                        Pagado
+                      </span>
+                    ) : (
+                      <button
+                        onClick={() => onMarcarCargoPagado(c.id)}
+                        className="rounded-full border border-grafito-suave px-2 py-0.5 font-sans text-[10px] font-medium text-tinta/60 transition hover:border-tinta/25 hover:text-tinta"
+                      >
+                        Marcar pagado
+                      </button>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+          <div className="mt-2 flex items-center gap-1.5">
+            <input
+              type="text"
+              placeholder="Descripción (ej. reparación de portón)"
+              value={nuevaDescripcion}
+              onChange={(e) => setNuevaDescripcion(e.target.value)}
+              className="min-w-0 flex-1 rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-sans text-xs text-tinta outline-none focus:border-tinta/40"
+            />
+            <input
+              type="number"
+              min={0}
+              placeholder="Monto"
+              value={nuevoMonto}
+              onChange={(e) => setNuevoMonto(e.target.value)}
+              className="tabular w-20 rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-mono text-xs text-tinta outline-none focus:border-tinta/40"
+            />
+            <button
+              onClick={enviarNuevoCargo}
+              className="shrink-0 rounded-md bg-tinta px-2.5 py-1.5 font-sans text-xs font-semibold text-hueso transition hover:bg-tinta-suave"
+            >
+              Agregar
+            </button>
           </div>
 
           <p className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
@@ -215,7 +295,8 @@ function TarjetaPropiedad({
 }
 
 export function Admin() {
-  const { datos, registrarPago, actualizarServicios, reiniciarDemo } = useDatos();
+  const { datos, registrarPago, marcarCargoPagado, agregarCargo, actualizarServicios, reiniciarDemo } =
+    useDatos();
   const [confirmandoReinicio, setConfirmandoReinicio] = useState(false);
   const [expandidoId, setExpandidoId] = useState<string | null>(null);
   const mes = mesActual();
@@ -232,6 +313,7 @@ export function Admin() {
           pagos: [...datos.pagos]
             .filter((p) => p.propiedadId === prop.id)
             .sort((a, b) => b.mes.localeCompare(a.mes)),
+          cargos: datos.cargos.filter((c) => c.propiedadId === prop.id),
           cargosPendientes: datos.cargos.filter(
             (c) => c.propiedadId === prop.id && !c.pagado
           ),
@@ -410,13 +492,14 @@ export function Admin() {
           <section id="propiedades" className="mt-10 scroll-mt-6">
             <h2 className="font-display text-xl font-semibold text-tinta">Propiedades</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
-              {filas.map(({ prop, estado, ultimoPago, pagos, cargosPendientes }) => (
+              {filas.map(({ prop, estado, ultimoPago, pagos, cargos, cargosPendientes }) => (
                 <TarjetaPropiedad
                   key={prop.id}
                   prop={prop}
                   estado={estado}
                   ultimoPago={ultimoPago}
                   pagos={pagos}
+                  cargos={cargos}
                   cargosPendientes={cargosPendientes}
                   expandido={expandidoId === prop.id}
                   onToggleExpandir={() =>
@@ -429,6 +512,10 @@ export function Admin() {
                     );
                     actualizarServicios(prop.id, nuevos);
                   }}
+                  onMarcarCargoPagado={marcarCargoPagado}
+                  onAgregarCargo={(descripcion, monto) =>
+                    agregarCargo(prop.id, descripcion, monto)
+                  }
                 />
               ))}
             </div>

@@ -26,6 +26,7 @@ interface DataContextValue {
   datos: DatosApp;
   registrarPago: (propiedadId: string, monto: number, mes?: string) => void;
   marcarCargoPagado: (cargoId: string) => void;
+  agregarCargo: (propiedadId: string, descripcion: string, monto: number) => void;
   actualizarServicios: (propiedadId: string, servicios: Servicio[]) => void;
   reiniciarDemo: () => void;
 }
@@ -69,6 +70,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const agregarCargo = useCallback(
+    (propiedadId: string, descripcion: string, monto: number) => {
+      setDatos((prev) => {
+        const nuevoCargo: CargoEspecial = {
+          id: `cg-${Date.now()}`,
+          propiedadId,
+          descripcion,
+          monto,
+          pagado: false,
+          fecha: new Date().toISOString().slice(0, 10),
+        };
+        const actualizado = { ...prev, cargos: [...prev.cargos, nuevoCargo] };
+        guardarDatos(actualizado);
+        return actualizado;
+      });
+    },
+    []
+  );
+
   const actualizarServicios = useCallback((propiedadId: string, servicios: Servicio[]) => {
     setDatos((prev) => {
       const propiedades = prev.propiedades.map((p) =>
@@ -87,8 +107,15 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ datos, registrarPago, marcarCargoPagado, actualizarServicios, reiniciarDemo }),
-    [datos, registrarPago, marcarCargoPagado, actualizarServicios, reiniciarDemo]
+    () => ({
+      datos,
+      registrarPago,
+      marcarCargoPagado,
+      agregarCargo,
+      actualizarServicios,
+      reiniciarDemo,
+    }),
+    [datos, registrarPago, marcarCargoPagado, agregarCargo, actualizarServicios, reiniciarDemo]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
