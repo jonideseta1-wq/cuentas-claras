@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { CargoEspecial, DatosApp, Pago } from "../types";
+import type { CargoEspecial, DatosApp, Pago, Servicio } from "../types";
 import { DATOS_INICIALES } from "../data/mockData";
 import { mesActual } from "../lib/utils";
 
@@ -26,6 +26,7 @@ interface DataContextValue {
   datos: DatosApp;
   registrarPago: (propiedadId: string, monto: number, mes?: string) => void;
   marcarCargoPagado: (cargoId: string) => void;
+  actualizarServicios: (propiedadId: string, servicios: Servicio[]) => void;
   reiniciarDemo: () => void;
 }
 
@@ -68,6 +69,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const actualizarServicios = useCallback((propiedadId: string, servicios: Servicio[]) => {
+    setDatos((prev) => {
+      const propiedades = prev.propiedades.map((p) =>
+        p.id === propiedadId ? { ...p, servicios } : p
+      );
+      const actualizado = { ...prev, propiedades };
+      guardarDatos(actualizado);
+      return actualizado;
+    });
+  }, []);
+
   const reiniciarDemo = useCallback(() => {
     const frescos = structuredClone(DATOS_INICIALES);
     guardarDatos(frescos);
@@ -75,8 +87,8 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const value = useMemo(
-    () => ({ datos, registrarPago, marcarCargoPagado, reiniciarDemo }),
-    [datos, registrarPago, marcarCargoPagado, reiniciarDemo]
+    () => ({ datos, registrarPago, marcarCargoPagado, actualizarServicios, reiniciarDemo }),
+    [datos, registrarPago, marcarCargoPagado, actualizarServicios, reiniciarDemo]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

@@ -28,24 +28,15 @@ import {
   IconCasa,
   IconCheckCirculo,
   IconDocumento,
-  IconGota,
-  IconLlama,
   IconLlave,
   IconPerfil,
   IconRayo,
   IconRecibo,
   IconRelojCirculo,
   IconTendencia,
-  IconWifi,
 } from "../components/icons";
-import type { Pago, Propiedad, TipoServicio } from "../types";
-
-const SERVICIO_INFO: Record<TipoServicio, { etiqueta: string; Icono: typeof IconGota }> = {
-  agua: { etiqueta: "Agua", Icono: IconGota },
-  luz: { etiqueta: "Luz", Icono: IconRayo },
-  gas: { etiqueta: "Gas", Icono: IconLlama },
-  internet: { etiqueta: "Internet", Icono: IconWifi },
-};
+import { SERVICIO_INFO } from "../lib/servicioInfo";
+import type { Pago, Propiedad } from "../types";
 
 function generarRecibo(propiedad: Propiedad, pago: Pago): string {
   return [

@@ -7,7 +7,7 @@ import { StatusPill } from "../components/StatusPill";
 import { InicialesAvatar } from "../components/InicialesAvatar";
 import { ReceiptRow } from "../components/ReceiptRow";
 import { useDatos } from "../state/DataContext";
-import type { CargoEspecial, EstadoPago, Pago, Propiedad } from "../types";
+import type { CargoEspecial, EstadoPago, Pago, Propiedad, TipoServicio } from "../types";
 import {
   diasHastaVencimientoContrato,
   estadoPropiedad,
@@ -17,11 +17,13 @@ import {
   mesActual,
   porcentajeContratoCompletado,
 } from "../lib/utils";
+import { ORDEN_SERVICIOS, SERVICIO_INFO } from "../lib/servicioInfo";
 import {
   IconAlertaCirculo,
   IconCalendario,
   IconCasa,
   IconContrato,
+  IconRayo,
   IconRecibo,
   IconRelojCirculo,
 } from "../components/icons";
@@ -41,6 +43,7 @@ function TarjetaPropiedad({
   expandido,
   onToggleExpandir,
   onRegistrarPago,
+  onActualizarServicios,
 }: {
   prop: Propiedad;
   estado: EstadoPago;
@@ -50,9 +53,11 @@ function TarjetaPropiedad({
   expandido: boolean;
   onToggleExpandir: () => void;
   onRegistrarPago: () => void;
+  onActualizarServicios: (tipo: TipoServicio, monto: number) => void;
 }) {
   const pct = porcentajeContratoCompletado(prop.contratoInicio, prop.contratoFin);
   const subtotalCargos = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
+  const subtotalServicios = prop.servicios.reduce((acc, s) => acc + s.monto, 0);
 
   return (
     <div
@@ -122,6 +127,19 @@ function TarjetaPropiedad({
         </div>
       )}
 
+      <button
+        onClick={onToggleExpandir}
+        className="mt-3 flex w-full items-center justify-between rounded-xl bg-papel px-3.5 py-2.5 transition hover:bg-grafito-suave/40"
+      >
+        <span className="flex items-center gap-2 font-sans text-xs text-tinta/55">
+          <IconRayo className="h-4 w-4 text-tinta/35" />
+          Servicios: {formatoMoneda(subtotalServicios)}/mes
+        </span>
+        <span className="font-sans text-xs font-medium text-tinta/45">
+          {expandido ? "Ocultar" : "Editar"}
+        </span>
+      </button>
+
       <div className="mt-4 flex items-center justify-between border-t border-grafito-suave pt-4">
         <button
           onClick={onToggleExpandir}
@@ -146,6 +164,32 @@ function TarjetaPropiedad({
       {expandido && (
         <div className="mt-4 border-t border-dashed border-grafito-suave pt-3">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
+            Servicios (editable)
+          </p>
+          <div className="mt-2 grid grid-cols-2 gap-2">
+            {ORDEN_SERVICIOS.map((tipo) => {
+              const servicio = prop.servicios.find((s) => s.tipo === tipo);
+              const { etiqueta, Icono } = SERVICIO_INFO[tipo];
+              return (
+                <label
+                  key={tipo}
+                  className="flex items-center gap-2 rounded-lg border border-grafito-suave px-2.5 py-2"
+                >
+                  <Icono className="h-3.5 w-3.5 shrink-0 text-tinta/40" />
+                  <span className="font-sans text-xs text-tinta/60">{etiqueta}</span>
+                  <input
+                    type="number"
+                    min={0}
+                    value={servicio?.monto ?? 0}
+                    onChange={(e) => onActualizarServicios(tipo, Number(e.target.value) || 0)}
+                    className="tabular ml-auto w-20 rounded-md border border-grafito-suave bg-papel px-1.5 py-1 text-right font-mono text-xs text-tinta outline-none focus:border-tinta/40"
+                  />
+                </label>
+              );
+            })}
+          </div>
+
+          <p className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
             Historial de pagos
           </p>
           {pagos.length === 0 ? (
@@ -171,7 +215,7 @@ function TarjetaPropiedad({
 }
 
 export function Admin() {
-  const { datos, registrarPago, reiniciarDemo } = useDatos();
+  const { datos, registrarPago, actualizarServicios, reiniciarDemo } = useDatos();
   const [confirmandoReinicio, setConfirmandoReinicio] = useState(false);
   const [expandidoId, setExpandidoId] = useState<string | null>(null);
   const mes = mesActual();
@@ -379,6 +423,12 @@ export function Admin() {
                     setExpandidoId(expandidoId === prop.id ? null : prop.id)
                   }
                   onRegistrarPago={() => registrarPago(prop.id, prop.alquilerMensual)}
+                  onActualizarServicios={(tipo, monto) => {
+                    const nuevos = prop.servicios.map((s) =>
+                      s.tipo === tipo ? { ...s, monto } : s
+                    );
+                    actualizarServicios(prop.id, nuevos);
+                  }}
                 />
               ))}
             </div>
