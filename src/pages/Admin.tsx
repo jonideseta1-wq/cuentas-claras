@@ -23,6 +23,7 @@ import { ORDEN_SERVICIOS, SERVICIO_INFO } from "../lib/servicioInfo";
 import { PROPIETARIO } from "../data/mockData";
 import { TarjetaResumenInquilino } from "../components/TarjetaResumenInquilino";
 import { PanelGastos } from "../components/PanelGastos";
+import { PanelContratos } from "../components/PanelContratos";
 import {
   IconAlertaCirculo,
   IconCalendario,
@@ -36,7 +37,7 @@ import {
   IconTendencia,
 } from "../components/icons";
 
-type VistaAdmin = "dashboard" | "inquilinos" | "gastos";
+type VistaAdmin = "dashboard" | "inquilinos" | "gastos" | "contratos";
 
 const BORDE_ESTADO: Record<EstadoPago, string> = {
   "al-dia": "border-l-verde-recibo",
@@ -510,6 +511,21 @@ export function Admin() {
             />
             Gastos e impuestos
           </button>
+          <button
+            onClick={() => setVistaAdmin("contratos")}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-sm font-semibold transition ${
+              vistaAdmin === "contratos"
+                ? "bg-mostaza-suave text-tinta"
+                : "text-tinta/60 hover:bg-papel"
+            }`}
+          >
+            <IconContrato
+              className={`h-[18px] w-[18px] ${
+                vistaAdmin === "contratos" ? "text-mostaza" : "text-tinta/35"
+              }`}
+            />
+            Contratos
+          </button>
         </nav>
         <div className="mt-auto flex flex-col items-start gap-4 pt-8">
           <BackLink />
@@ -550,6 +566,14 @@ export function Admin() {
           >
             Gastos
           </button>
+          <button
+            onClick={() => setVistaAdmin("contratos")}
+            className={`rounded-full px-3 py-1.5 font-sans text-xs font-semibold transition ${
+              vistaAdmin === "contratos" ? "bg-mostaza-suave text-tinta" : "text-tinta/50"
+            }`}
+          >
+            Contratos
+          </button>
         </div>
 
         <div className="mx-auto w-full max-w-5xl px-6 py-8 sm:px-10 sm:py-10">
@@ -568,6 +592,8 @@ export function Admin() {
                   "Lo que le corresponde abonar a cada inquilino este período."}
                 {vistaAdmin === "gastos" &&
                   "Servicios, impuestos y gastos compartidos de todas las propiedades."}
+                {vistaAdmin === "contratos" &&
+                  "Vigencia, índice de ajuste y valor de mercado de referencia."}
               </p>
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.14em] text-tinta/40">
@@ -768,6 +794,7 @@ export function Admin() {
           )}
 
           {vistaAdmin === "gastos" && <PanelGastos propiedades={datos.propiedades} />}
+          {vistaAdmin === "contratos" && <PanelContratos propiedades={datos.propiedades} />}
         </div>
       </div>
     </div>

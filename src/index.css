@@ -74,3 +74,18 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .imprimible,
+  .imprimible * {
+    visibility: visible;
+  }
+  .imprimible {
+    position: absolute;
+    inset: 0;
+    padding: 2rem;
+  }
+}
