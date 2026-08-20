@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useMemo, useState } from "react";
 import type { ReactNode } from "react";
-import type { CargoEspecial, DatosApp, Pago, Servicio } from "../types";
+import type { CargoEspecial, DatosApp, Pago, Propiedad, Servicio } from "../types";
 import { DATOS_INICIALES } from "../data/mockData";
 import { mesActual } from "../lib/utils";
 
@@ -28,6 +28,12 @@ interface DataContextValue {
   marcarCargoPagado: (cargoId: string) => void;
   agregarCargo: (propiedadId: string, descripcion: string, monto: number) => void;
   actualizarServicios: (propiedadId: string, servicios: Servicio[]) => void;
+  actualizarPropiedad: (
+    propiedadId: string,
+    cambios: Partial<
+      Pick<Propiedad, "alquilerMensual" | "diaVencimiento" | "contratoInicio" | "contratoFin">
+    >
+  ) => void;
   reiniciarDemo: () => void;
 }
 
@@ -100,6 +106,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  const actualizarPropiedad = useCallback(
+    (
+      propiedadId: string,
+      cambios: Partial<
+        Pick<Propiedad, "alquilerMensual" | "diaVencimiento" | "contratoInicio" | "contratoFin">
+      >
+    ) => {
+      setDatos((prev) => {
+        const propiedades = prev.propiedades.map((p) =>
+          p.id === propiedadId ? { ...p, ...cambios } : p
+        );
+        const actualizado = { ...prev, propiedades };
+        guardarDatos(actualizado);
+        return actualizado;
+      });
+    },
+    []
+  );
+
   const reiniciarDemo = useCallback(() => {
     const frescos = structuredClone(DATOS_INICIALES);
     guardarDatos(frescos);
@@ -113,9 +138,18 @@ export function DataProvider({ children }: { children: ReactNode }) {
       marcarCargoPagado,
       agregarCargo,
       actualizarServicios,
+      actualizarPropiedad,
       reiniciarDemo,
     }),
-    [datos, registrarPago, marcarCargoPagado, agregarCargo, actualizarServicios, reiniciarDemo]
+    [
+      datos,
+      registrarPago,
+      marcarCargoPagado,
+      agregarCargo,
+      actualizarServicios,
+      actualizarPropiedad,
+      reiniciarDemo,
+    ]
   );
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
