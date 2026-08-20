@@ -425,7 +425,7 @@ export function Admin() {
 
   return (
     <div className="flex min-h-svh bg-papel">
-      <aside className="sticky top-0 hidden h-svh w-60 shrink-0 flex-col border-r border-grafito-suave bg-hueso px-5 py-6 lg:flex">
+      <aside className="sticky top-0 hidden h-svh w-60 shrink-0 flex-col overflow-y-auto border-r border-grafito-suave bg-hueso px-5 py-6 lg:flex">
         <Link to="/">
           <Logo />
         </Link>
