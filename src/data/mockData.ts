@@ -1,6 +1,8 @@
 import type { DatosApp } from "../types";
 
 // Todos los nombres, direcciones y montos son ficticios — solo para la demo.
+export const PROPIETARIO = "Julián Ferreyra";
+
 export const DATOS_INICIALES: DatosApp = {
   propiedades: [
     {

@@ -20,14 +20,17 @@ import {
   proximoAjusteAlquiler,
 } from "../lib/utils";
 import { ORDEN_SERVICIOS, SERVICIO_INFO } from "../lib/servicioInfo";
+import { PROPIETARIO } from "../data/mockData";
 import {
   IconAlertaCirculo,
   IconCalendario,
   IconCasa,
+  IconCheckCirculo,
   IconContrato,
   IconRayo,
   IconRecibo,
   IconRelojCirculo,
+  IconTendencia,
 } from "../components/icons";
 
 const BORDE_ESTADO: Record<EstadoPago, string> = {
@@ -405,6 +408,15 @@ export function Admin() {
     .sort((a, b) => a.diasContrato - b.diasContrato);
   const totalAvisos = enMora.length + contratosPorVencer.length;
 
+  const totalPotencial = filas.reduce((acc, f) => acc + f.prop.alquilerMensual, 0);
+  const rentabilidad =
+    totalPotencial > 0 ? Math.round((cobradoEsteMes / totalPotencial) * 100) : 0;
+  const gastosDelMes = 0; // se conecta en "Gastos e Impuestos"
+  const totalCargosPendientes = filas.reduce(
+    (acc, f) => acc + f.cargosPendientes.reduce((a, c) => a + c.monto, 0),
+    0
+  );
+
   const botonReiniciar = confirmandoReinicio ? (
     <div className="flex items-center gap-2 font-sans text-xs">
       <span className="text-tinta/55">¿Confirmar?</span>
@@ -479,8 +491,11 @@ export function Admin() {
         <div className="mx-auto w-full max-w-5xl px-6 py-8 sm:px-10 sm:py-10">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <h1 className="font-display text-3xl font-semibold text-tinta">
+              <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-tinta/40">
                 Panel administrador
+              </p>
+              <h1 className="mt-1 font-display text-3xl font-semibold text-tinta">
+                Hola, {PROPIETARIO.split(" ")[0]}
               </h1>
               <p className="mt-1.5 font-sans text-sm text-tinta/55">
                 Vistazo del mes, un clic para registrar cada pago.
@@ -491,7 +506,7 @@ export function Admin() {
             </span>
           </div>
 
-          <section className="mt-8 grid gap-4 sm:grid-cols-3">
+          <section className="mt-8 grid grid-cols-2 gap-4 sm:grid-cols-3">
             <StatTile
               Icono={IconRecibo}
               tono="verde"
@@ -511,6 +526,71 @@ export function Admin() {
               valor={String(filas.length)}
               nota={`${alDia} al día`}
             />
+            <StatTile
+              Icono={IconTendencia}
+              tono="verde"
+              etiqueta="Rentabilidad"
+              valor={`${rentabilidad}%`}
+              nota="cobrado vs. potencial"
+            />
+            <StatTile
+              Icono={IconRayo}
+              tono="neutro"
+              etiqueta="Gastos"
+              valor={formatoMoneda(gastosDelMes)}
+              nota="próximamente"
+            />
+            <StatTile
+              Icono={IconRelojCirculo}
+              tono="mostaza"
+              etiqueta="Cargos especiales pendientes"
+              valor={formatoMoneda(totalCargosPendientes)}
+            />
+          </section>
+
+          <section className="mt-10">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h2 className="font-display text-xl font-semibold text-tinta">
+                Cobros del mes
+              </h2>
+              <span className="font-mono text-xs text-tinta/50">
+                {alDia} de {filas.length} propiedades cobradas
+              </span>
+            </div>
+            <div className="mt-2.5 h-2 w-full overflow-hidden rounded-full bg-grafito-suave">
+              <div
+                className="h-full rounded-full bg-verde-recibo transition-[width]"
+                style={{ width: `${filas.length > 0 ? (alDia / filas.length) * 100 : 0}%` }}
+              />
+            </div>
+            <div className="mt-4 divide-y divide-dashed divide-grafito-suave rounded-2xl border border-grafito-suave bg-hueso">
+              {filas.map(({ prop, estado }) => (
+                <div key={prop.id} className="flex items-center justify-between gap-3 px-4 py-2.5">
+                  <span className="flex items-center gap-2.5">
+                    {estado === "al-dia" ? (
+                      <IconCheckCirculo className="h-4 w-4 shrink-0 text-verde-recibo" />
+                    ) : (
+                      <IconRelojCirculo
+                        className={`h-4 w-4 shrink-0 ${
+                          estado === "mora" ? "text-mora" : "text-ambar"
+                        }`}
+                      />
+                    )}
+                    <span className="font-sans text-sm text-tinta/75">
+                      {prop.inquilino}{" "}
+                      <span className="text-tinta/40">— {prop.direccion}</span>
+                    </span>
+                  </span>
+                  <span
+                    className={`tabular font-mono text-xs font-semibold ${
+                      estado === "al-dia" ? "text-verde-recibo" : "text-tinta/40"
+                    }`}
+                  >
+                    {estado === "al-dia" ? formatoMoneda(prop.alquilerMensual) : "Pendiente"}
+                  </span>
+                </div>
+              ))}
+            </div>
           </section>
 
           {totalAvisos > 0 && (
