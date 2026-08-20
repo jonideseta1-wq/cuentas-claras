@@ -22,6 +22,7 @@ import {
 import { ORDEN_SERVICIOS, SERVICIO_INFO } from "../lib/servicioInfo";
 import { PROPIETARIO } from "../data/mockData";
 import { TarjetaResumenInquilino } from "../components/TarjetaResumenInquilino";
+import { PanelGastos } from "../components/PanelGastos";
 import {
   IconAlertaCirculo,
   IconCalendario,
@@ -35,7 +36,7 @@ import {
   IconTendencia,
 } from "../components/icons";
 
-type VistaAdmin = "dashboard" | "inquilinos";
+type VistaAdmin = "dashboard" | "inquilinos" | "gastos";
 
 const BORDE_ESTADO: Record<EstadoPago, string> = {
   "al-dia": "border-l-verde-recibo",
@@ -494,6 +495,21 @@ export function Admin() {
             />
             Resumen por inquilino
           </button>
+          <button
+            onClick={() => setVistaAdmin("gastos")}
+            className={`flex items-center gap-3 rounded-lg px-3 py-2.5 font-sans text-sm font-semibold transition ${
+              vistaAdmin === "gastos"
+                ? "bg-mostaza-suave text-tinta"
+                : "text-tinta/60 hover:bg-papel"
+            }`}
+          >
+            <IconRayo
+              className={`h-[18px] w-[18px] ${
+                vistaAdmin === "gastos" ? "text-mostaza" : "text-tinta/35"
+              }`}
+            />
+            Gastos e impuestos
+          </button>
         </nav>
         <div className="mt-auto flex flex-col items-start gap-4 pt-8">
           <BackLink />
@@ -526,6 +542,14 @@ export function Admin() {
           >
             Resumen por inquilino
           </button>
+          <button
+            onClick={() => setVistaAdmin("gastos")}
+            className={`rounded-full px-3 py-1.5 font-sans text-xs font-semibold transition ${
+              vistaAdmin === "gastos" ? "bg-mostaza-suave text-tinta" : "text-tinta/50"
+            }`}
+          >
+            Gastos
+          </button>
         </div>
 
         <div className="mx-auto w-full max-w-5xl px-6 py-8 sm:px-10 sm:py-10">
@@ -538,9 +562,12 @@ export function Admin() {
                 Hola, {PROPIETARIO.split(" ")[0]}
               </h1>
               <p className="mt-1.5 font-sans text-sm text-tinta/55">
-                {vistaAdmin === "dashboard"
-                  ? "Vistazo del mes, un clic para registrar cada pago."
-                  : "Lo que le corresponde abonar a cada inquilino este período."}
+                {vistaAdmin === "dashboard" &&
+                  "Vistazo del mes, un clic para registrar cada pago."}
+                {vistaAdmin === "inquilinos" &&
+                  "Lo que le corresponde abonar a cada inquilino este período."}
+                {vistaAdmin === "gastos" &&
+                  "Servicios, impuestos y gastos compartidos de todas las propiedades."}
               </p>
             </div>
             <span className="font-mono text-xs uppercase tracking-[0.14em] text-tinta/40">
@@ -739,6 +766,8 @@ export function Admin() {
               </div>
             </section>
           )}
+
+          {vistaAdmin === "gastos" && <PanelGastos propiedades={datos.propiedades} />}
         </div>
       </div>
     </div>
