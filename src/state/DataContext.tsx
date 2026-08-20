@@ -30,10 +30,9 @@ interface DataContextValue {
   actualizarServicios: (propiedadId: string, servicios: Servicio[]) => void;
   actualizarPropiedad: (
     propiedadId: string,
-    cambios: Partial<
-      Pick<Propiedad, "alquilerMensual" | "diaVencimiento" | "contratoInicio" | "contratoFin">
-    >
+    cambios: Partial<Omit<Propiedad, "id" | "pin" | "servicios">>
   ) => void;
+  agregarPropiedad: (datos: Omit<Propiedad, "id" | "pin" | "servicios">) => void;
   reiniciarDemo: () => void;
 }
 
@@ -107,17 +106,34 @@ export function DataProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const actualizarPropiedad = useCallback(
-    (
-      propiedadId: string,
-      cambios: Partial<
-        Pick<Propiedad, "alquilerMensual" | "diaVencimiento" | "contratoInicio" | "contratoFin">
-      >
-    ) => {
+    (propiedadId: string, cambios: Partial<Omit<Propiedad, "id" | "pin" | "servicios">>) => {
       setDatos((prev) => {
         const propiedades = prev.propiedades.map((p) =>
           p.id === propiedadId ? { ...p, ...cambios } : p
         );
         const actualizado = { ...prev, propiedades };
+        guardarDatos(actualizado);
+        return actualizado;
+      });
+    },
+    []
+  );
+
+  const agregarPropiedad = useCallback(
+    (datos: Omit<Propiedad, "id" | "pin" | "servicios">) => {
+      setDatos((prev) => {
+        const nuevaPropiedad: Propiedad = {
+          ...datos,
+          id: `p-${Date.now()}`,
+          pin: String(Math.floor(1000 + Math.random() * 9000)),
+          servicios: [
+            { tipo: "agua", monto: 8500 },
+            { tipo: "luz", monto: 15000 },
+            { tipo: "gas", monto: 7500 },
+            { tipo: "internet", monto: 11500 },
+          ],
+        };
+        const actualizado = { ...prev, propiedades: [...prev.propiedades, nuevaPropiedad] };
         guardarDatos(actualizado);
         return actualizado;
       });
@@ -139,6 +155,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       agregarCargo,
       actualizarServicios,
       actualizarPropiedad,
+      agregarPropiedad,
       reiniciarDemo,
     }),
     [
@@ -148,6 +165,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       agregarCargo,
       actualizarServicios,
       actualizarPropiedad,
+      agregarPropiedad,
       reiniciarDemo,
     ]
   );

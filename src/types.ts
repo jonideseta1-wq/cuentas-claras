@@ -7,6 +7,8 @@ export interface Servicio {
   monto: number;
 }
 
+export type IndiceAjuste = "ICL" | "IPC";
+
 export interface Propiedad {
   id: string;
   direccion: string;
@@ -17,6 +19,7 @@ export interface Propiedad {
   diaVencimiento: number; // día del mes en que vence el pago
   contratoInicio: string; // ISO date
   contratoFin: string; // ISO date
+  indice: IndiceAjuste; // índice de ajuste periódico del alquiler
   servicios: Servicio[]; // servicios compartidos que se dividen por unidad
 }
 

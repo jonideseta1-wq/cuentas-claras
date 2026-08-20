@@ -8,12 +8,6 @@ import {
 } from "../lib/utils";
 import type { Propiedad } from "../types";
 
-function indiceDe(propiedadId: string): "ICL" | "IPC" {
-  let acumulado = 0;
-  for (let i = 0; i < propiedadId.length; i++) acumulado += propiedadId.charCodeAt(i);
-  return acumulado % 2 === 0 ? "ICL" : "IPC";
-}
-
 function estiloDias(dias: number): { texto: string; fondo: string; color: string } {
   if (dias <= 15) return { texto: "text-mora", fondo: "bg-mora-suave", color: "text-mora" };
   if (dias <= 60) return { texto: "text-ambar", fondo: "bg-ambar-suave", color: "text-ambar" };
@@ -66,7 +60,7 @@ function ModalContrato({ prop, onCerrar }: { prop: Propiedad; onCerrar: () => vo
             <div className="flex justify-between">
               <span className="font-sans text-sm text-tinta/55">Índice de ajuste</span>
               <span className="font-sans text-sm font-semibold text-tinta">
-                {indiceDe(prop.id)}
+                {prop.indice}
               </span>
             </div>
             <div className="flex justify-between">
@@ -157,7 +151,7 @@ export function PanelContratos({ propiedades }: { propiedades: Propiedad[] }) {
                       {formatoMoneda(prop.alquilerMensual)}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3 font-sans text-xs text-tinta/60">
-                      {indiceDe(prop.id)}
+                      {prop.indice}
                     </td>
                     <td className="whitespace-nowrap px-4 py-3">
                       <span className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold ${e.fondo} ${e.color}`}>

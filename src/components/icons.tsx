@@ -159,6 +159,31 @@ export function IconLlama(props: IconProps) {
   );
 }
 
+export function IconLapiz(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M12.6 3.4a1.6 1.6 0 0 1 2.3 0l1.7 1.7a1.6 1.6 0 0 1 0 2.3L7.4 16.6l-4 .9.9-4Z" />
+      <path d="M11.3 4.7 15.3 8.7" />
+    </svg>
+  );
+}
+
+export function IconMas(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M10 4v12M4 10h12" />
+    </svg>
+  );
+}
+
+export function IconX(props: IconProps) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M5.5 5.5 14.5 14.5M14.5 5.5 5.5 14.5" />
+    </svg>
+  );
+}
+
 export function IconWifi(props: IconProps) {
   return (
     <svg {...base} {...props}>

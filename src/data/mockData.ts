@@ -15,6 +15,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 10,
       contratoInicio: "2025-04-01",
       contratoFin: "2027-03-31",
+      indice: "IPC",
       servicios: [
         { tipo: "agua", monto: 9000 },
         { tipo: "luz", monto: 15000 },
@@ -32,6 +33,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 5,
       contratoInicio: "2024-10-01",
       contratoFin: "2026-09-30",
+      indice: "ICL",
       servicios: [
         { tipo: "agua", monto: 8500 },
         { tipo: "luz", monto: 18000 },
@@ -49,6 +51,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 27,
       contratoInicio: "2025-02-01",
       contratoFin: "2027-01-31",
+      indice: "IPC",
       servicios: [
         { tipo: "agua", monto: 9500 },
         { tipo: "luz", monto: 16000 },
@@ -66,6 +69,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 10,
       contratoInicio: "2024-11-01",
       contratoFin: "2026-10-05",
+      indice: "ICL",
       servicios: [
         { tipo: "agua", monto: 7000 },
         { tipo: "luz", monto: 13000 },
@@ -83,6 +87,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 1,
       contratoInicio: "2025-09-01",
       contratoFin: "2026-08-31",
+      indice: "IPC",
       servicios: [
         { tipo: "agua", monto: 10000 },
         { tipo: "luz", monto: 19000 },
@@ -100,6 +105,7 @@ export const DATOS_INICIALES: DatosApp = {
       diaVencimiento: 29,
       contratoInicio: "2025-06-01",
       contratoFin: "2027-05-31",
+      indice: "ICL",
       servicios: [
         { tipo: "agua", monto: 8000 },
         { tipo: "luz", monto: 14000 },

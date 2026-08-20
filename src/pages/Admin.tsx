@@ -24,12 +24,16 @@ import { PROPIETARIO } from "../data/mockData";
 import { TarjetaResumenInquilino } from "../components/TarjetaResumenInquilino";
 import { PanelGastos } from "../components/PanelGastos";
 import { PanelContratos } from "../components/PanelContratos";
+import { ModalPropiedad } from "../components/ModalPropiedad";
+import type { DatosPropiedadForm } from "../components/ModalPropiedad";
 import {
   IconAlertaCirculo,
   IconCalendario,
   IconCasa,
   IconCheckCirculo,
   IconContrato,
+  IconLapiz,
+  IconMas,
   IconPerfil,
   IconRayo,
   IconRecibo,
@@ -58,7 +62,7 @@ function TarjetaPropiedad({
   onActualizarServicios,
   onMarcarCargoPagado,
   onAgregarCargo,
-  onActualizarPropiedad,
+  onEditar,
 }: {
   prop: Propiedad;
   estado: EstadoPago;
@@ -72,11 +76,7 @@ function TarjetaPropiedad({
   onActualizarServicios: (tipo: TipoServicio, monto: number) => void;
   onMarcarCargoPagado: (cargoId: string) => void;
   onAgregarCargo: (descripcion: string, monto: number) => void;
-  onActualizarPropiedad: (
-    cambios: Partial<
-      Pick<Propiedad, "alquilerMensual" | "diaVencimiento" | "contratoInicio" | "contratoFin">
-    >
-  ) => void;
+  onEditar: () => void;
 }) {
   const pct = porcentajeContratoCompletado(prop.contratoInicio, prop.contratoFin);
   const subtotalCargos = cargosPendientes.reduce((acc, c) => acc + c.monto, 0);
@@ -114,7 +114,16 @@ function TarjetaPropiedad({
             </p>
           </div>
         </div>
-        <StatusPill estado={estado} />
+        <div className="flex shrink-0 items-center gap-2">
+          <button
+            onClick={onEditar}
+            aria-label="Editar propiedad"
+            className="rounded-full border border-grafito-suave p-2 text-tinta/50 transition hover:border-tinta/25 hover:text-tinta"
+          >
+            <IconLapiz className="h-3.5 w-3.5" />
+          </button>
+          <StatusPill estado={estado} />
+        </div>
       </div>
 
       <div className="mt-4 flex items-center gap-4 rounded-xl bg-papel px-3.5 py-3">
@@ -225,57 +234,6 @@ function TarjetaPropiedad({
       {expandido && (
         <div className="mt-4 border-t border-dashed border-grafito-suave pt-3">
           <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
-            Datos de la propiedad
-          </p>
-          <div className="mt-2 grid grid-cols-2 gap-2">
-            <label className="flex flex-col gap-1">
-              <span className="font-sans text-[11px] text-tinta/50">Alquiler mensual</span>
-              <input
-                type="number"
-                min={0}
-                value={prop.alquilerMensual}
-                onChange={(e) =>
-                  onActualizarPropiedad({ alquilerMensual: Number(e.target.value) || 0 })
-                }
-                className="tabular rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-mono text-xs text-tinta outline-none focus:border-tinta/40"
-              />
-            </label>
-            <label className="flex flex-col gap-1">
-              <span className="font-sans text-[11px] text-tinta/50">Día de vencimiento</span>
-              <input
-                type="number"
-                min={1}
-                max={31}
-                value={prop.diaVencimiento}
-                onChange={(e) =>
-                  onActualizarPropiedad({
-                    diaVencimiento: Math.min(31, Math.max(1, Number(e.target.value) || 1)),
-                  })
-                }
-                className="tabular rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-mono text-xs text-tinta outline-none focus:border-tinta/40"
-              />
-            </label>
-            <label className="flex flex-col gap-1">
-              <span className="font-sans text-[11px] text-tinta/50">Contrato desde</span>
-              <input
-                type="date"
-                value={prop.contratoInicio}
-                onChange={(e) => onActualizarPropiedad({ contratoInicio: e.target.value })}
-                className="rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-mono text-xs text-tinta outline-none focus:border-tinta/40"
-              />
-            </label>
-            <label className="flex flex-col gap-1">
-              <span className="font-sans text-[11px] text-tinta/50">Contrato hasta</span>
-              <input
-                type="date"
-                value={prop.contratoFin}
-                onChange={(e) => onActualizarPropiedad({ contratoFin: e.target.value })}
-                className="rounded-md border border-grafito-suave bg-papel px-2 py-1.5 font-mono text-xs text-tinta outline-none focus:border-tinta/40"
-              />
-            </label>
-          </div>
-
-          <p className="mt-4 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-tinta/40">
             Cargos especiales
           </p>
           {cargos.length === 0 ? (
@@ -368,11 +326,24 @@ export function Admin() {
     agregarCargo,
     actualizarServicios,
     actualizarPropiedad,
+    agregarPropiedad,
     reiniciarDemo,
   } = useDatos();
   const [confirmandoReinicio, setConfirmandoReinicio] = useState(false);
   const [expandidoId, setExpandidoId] = useState<string | null>(null);
   const [vistaAdmin, setVistaAdmin] = useState<VistaAdmin>("dashboard");
+  const [propiedadEditando, setPropiedadEditando] = useState<Propiedad | null>(null);
+  const [creandoPropiedad, setCreandoPropiedad] = useState(false);
+
+  function guardarPropiedad(datosForm: DatosPropiedadForm) {
+    if (propiedadEditando) {
+      actualizarPropiedad(propiedadEditando.id, datosForm);
+      setPropiedadEditando(null);
+    } else {
+      agregarPropiedad(datosForm);
+      setCreandoPropiedad(false);
+    }
+  }
   const mes = mesActual();
 
   const filas = useMemo(
@@ -731,7 +702,16 @@ export function Admin() {
           )}
 
           <section id="propiedades" className="mt-10 scroll-mt-6">
-            <h2 className="font-display text-xl font-semibold text-tinta">Propiedades</h2>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="font-display text-xl font-semibold text-tinta">Propiedades</h2>
+              <button
+                onClick={() => setCreandoPropiedad(true)}
+                className="flex items-center gap-1.5 rounded-full bg-mostaza px-4 py-2 font-sans text-xs font-semibold text-tinta transition hover:bg-mostaza/85"
+              >
+                <IconMas className="h-3.5 w-3.5" />
+                Nueva propiedad
+              </button>
+            </div>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               {filas.map(({ prop, estado, ultimoPago, pagos, cargos, cargosPendientes }) => (
                 <TarjetaPropiedad
@@ -757,7 +737,7 @@ export function Admin() {
                   onAgregarCargo={(descripcion, monto) =>
                     agregarCargo(prop.id, descripcion, monto)
                   }
-                  onActualizarPropiedad={(cambios) => actualizarPropiedad(prop.id, cambios)}
+                  onEditar={() => setPropiedadEditando(prop)}
                 />
               ))}
             </div>
@@ -797,6 +777,17 @@ export function Admin() {
           {vistaAdmin === "contratos" && <PanelContratos propiedades={datos.propiedades} />}
         </div>
       </div>
+
+      {(propiedadEditando || creandoPropiedad) && (
+        <ModalPropiedad
+          propiedad={propiedadEditando}
+          onGuardar={guardarPropiedad}
+          onCerrar={() => {
+            setPropiedadEditando(null);
+            setCreandoPropiedad(false);
+          }}
+        />
+      )}
     </div>
   );
 }
